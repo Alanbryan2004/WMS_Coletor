@@ -79,6 +79,7 @@
     .acoes button {
       flex: 1;
       max-width: 150px;
+      min-width: 100px;
       padding: 10px 15px;
       font-size: 14px;
       font-weight: bold;
@@ -120,7 +121,6 @@
       }
 
       .acoes {
-        flex-direction: column;
         gap: 10px;
       }
 
@@ -147,8 +147,8 @@
   </div>
 
   <div class="acoes">
-    <button onclick="voltar()">Voltar</button>
-    <button onclick="logout()">Sair</button>
+    <button onclick="voltar()"><i class="fas fa-arrow-left"></i> Voltar</button>
+    <button onclick="logout()"><i class="fas fa-door-open"></i> Sair</button>
   </div>
 
   <script>
