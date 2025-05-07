@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -51,6 +52,13 @@
     .inline-group > label {
       margin: 0;
     }
+    .inline-fields {
+      display: flex;
+      gap: 10px;
+    }
+    .inline-fields .field {
+      flex: 1;
+    }
     .buttons {
       display: flex;
       justify-content: space-between;
@@ -85,16 +93,21 @@
 </head>
 <body>
   <div class="container">
-    <label for="agenda">Agenda</label>
-    <select id="agendaSelect">
-      <option value="">Selecionar</option>
-      <option value="000001">000001</option>
-    </select>
-
-    <label for="nf">Nº NF</label>
-    <select id="nf">
-      <option value="">Selecionar</option>
-    </select>
+    <div class="inline-fields">
+      <div class="field">
+        <label for="agenda">Agenda</label>
+        <select id="agendaSelect">
+          <option value="">Selecionar</option>
+          <option value="000001">000001</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="nf">Nº NF</label>
+        <select id="nf">
+          <option value="">Selecionar</option>
+        </select>
+      </div>
+    </div>
 
     <label for="etiqueta">Lê Etiqueta</label>
     <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
@@ -175,13 +188,11 @@
       }
     });
 
-    // Ação ao digitar no campo produto
     document.getElementById("produto").addEventListener("input", () => {
       document.getElementById("qtdItens").value = "1";
       document.getElementById("qtdVols").value = "1";
     });
 
-    // Ação para Enter em etiqueta -> foca em produto
     document.getElementById("etiqueta").addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
         e.preventDefault();
@@ -189,7 +200,6 @@
       }
     });
 
-    // Ação para Enter em produto -> confirma automaticamente
     document.getElementById("produto").addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
         e.preventDefault();
@@ -197,15 +207,11 @@
       }
     });
 
-    // Evento para preencher o campo Cliente com "Mantran Tecnologias Ltda"
     document.getElementById("nf").addEventListener("change", (e) => {
       const clienteInput = document.getElementById("cliente");
-      
       if (e.target.value) {
-        // Preenche o campo Cliente com o nome desejado
         clienteInput.value = "Mantran Tecnologias Ltda";
       } else {
-        // Limpa o campo Cliente caso a seleção de NF seja desfeita
         clienteInput.value = "";
       }
     });
@@ -216,7 +222,6 @@
 
       if (!etiqueta || !produto) return;
 
-      // Verifica se a etiqueta já foi usada
       if (etiquetasLidas.has(etiqueta)) {
         alert("Esta etiqueta já foi lida! Digite uma etiqueta diferente.");
         document.getElementById("etiqueta").value = '';
@@ -229,15 +234,12 @@
       if (itemLidoCount < totalItens) {
         itemLidoCount++;
         volLidoCount++;
-
         document.getElementById("itemLido").value = `${itemLidoCount}/${totalItens}`;
         document.getElementById("volLido").value = `${volLidoCount}/${totalItens}`;
-
         const codigo = document.getElementById("produto").value.trim();
         if (codigo) {
           produtoMap[codigo] = (produtoMap[codigo] || 0) + 1;
         }
-
         if (itemLidoCount === totalItens) {
           document.getElementById("mensagem").style.display = "block";
           document.getElementById("etiqueta").disabled = true;
@@ -245,7 +247,6 @@
           document.querySelector(".confirmar").disabled = true;
         }
       }
-
       document.getElementById("etiqueta").value = '';
       document.getElementById("produto").value = '';
       document.getElementById("qtdItens").value = '0';
