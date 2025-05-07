@@ -68,16 +68,19 @@
 
     .acoes {
       display: flex;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 0.5rem;
+      margin-top: 1.5rem;
       padding-bottom: 0.5rem;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .acoes button {
-      flex: 0 0 auto;
-      min-width: 120px;
+      flex: 1 1 30%;
+      min-width: 100px;
+      max-width: 150px;
       padding: 10px;
       font-weight: bold;
       font-size: 14px;
@@ -87,6 +90,7 @@
       color: white;
       cursor: pointer;
       transition: background 0.2s ease;
+      box-sizing: border-box;
     }
 
     .acoes button:hover {
@@ -174,29 +178,25 @@
     let itensLidos = [];
     let timeout;
 
-    // Função para iniciar o debounce
     function iniciarLeitura() {
-      clearTimeout(timeout);  // Cancela qualquer timeout anterior
-      timeout = setTimeout(adicionarProduto, 300);  // Chama a função adicionarProduto após 300ms
+      clearTimeout(timeout);
+      timeout = setTimeout(adicionarProduto, 300);
     }
 
-    // Função para adicionar o produto
     function adicionarProduto() {
       const codigo = document.getElementById("codigo").value.trim();
       if (!codigo) return;
 
-      const descricao = "Produto Exemplo";  // Substitua com lógica de busca de descrição real
-      const qtd = 10;  // Substitua com lógica de busca de quantidade real
-      const nf = "123456";  // Substitua com lógica de busca de número da nota fiscal real
-      const serie = "1";  // Substitua com lógica de busca de série real
+      const descricao = "Produto Exemplo";
+      const qtd = 10;
+      const nf = "123456";
+      const serie = "1";
 
-      // Preenche os campos com as informações do produto
       document.getElementById("descricao").value = descricao;
       document.getElementById("qtd").value = qtd;
       document.getElementById("nf").value = nf;
       document.getElementById("serie").value = serie;
 
-      // Verifica se o produto já foi lido, e se sim, atualiza a quantidade lida
       const index = itensLidos.findIndex(p => p.codigo === codigo);
       if (index >= 0) {
         itensLidos[index].qtdLida += 1;
@@ -204,13 +204,12 @@
         itensLidos.push({ codigo, descricao, qtdItem: qtd, qtdLida: 1 });
       }
 
-      atualizarTotais();  // Atualiza os totais
-      renderGrid();  // Atualiza a tabela
-      document.getElementById("codigo").value = "";  // Limpa o campo de código
-      document.getElementById("codigo").focus();  // Foca novamente no campo de código
+      atualizarTotais();
+      renderGrid();
+      document.getElementById("codigo").value = "";
+      document.getElementById("codigo").focus();
     }
 
-    // Função para atualizar os totais
     function atualizarTotais() {
       const totalItens = itensLidos.reduce((sum, item) => sum + Number(item.qtdItem), 0);
       const totalLidos = itensLidos.reduce((sum, item) => sum + Number(item.qtdLida), 0);
@@ -219,10 +218,9 @@
       document.getElementById("qtdTotal").value = totalItens;
     }
 
-    // Função para renderizar a tabela de itens lidos
     function renderGrid() {
       const tbody = document.querySelector("#tabela tbody");
-      tbody.innerHTML = "";  // Limpa a tabela antes de renderizar
+      tbody.innerHTML = "";
       itensLidos.forEach(item => {
         const row = document.createElement("tr");
         row.innerHTML = `
@@ -235,7 +233,6 @@
       });
     }
 
-    // Função para limpar todos os campos
     function limparCampos() {
       document.getElementById("codigo").value = "";
       document.getElementById("descricao").value = "";
@@ -247,19 +244,16 @@
       document.getElementById("codigo").focus();
     }
 
-    // Função para zerar a lista de itens
     function zerarGrid() {
       itensLidos = [];
       renderGrid();
       limparCampos();
     }
 
-    // Função para finalizar a agenda
     function finalizarAgenda() {
       alert("Agenda finalizada com sucesso!");
     }
 
-    // Função para voltar à página anterior
     function voltar() {
       window.location.href = "packlist.html";
     }
