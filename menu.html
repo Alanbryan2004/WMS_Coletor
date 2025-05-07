@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu - WMS Coletor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    img.logo {
+      max-width: 200px;
+      margin-bottom: 20px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .card i {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #c00000; /* Cor vermelha Mantran */
+    }
+
+    .card span {
+      display: block;
+      font-size: 14px;
+      color: #333;
+      font-weight: bold;
+    }
+	
+	.rodape {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #ffffff;
+  border-top: 1px solid #ddd;
+  color: #555;
+  font-size: 12px;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 999;
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+}
+  </style>
+</head>
+<body>
+  <img src="Logo_Mantran.png" alt="Logo Mantran Tecnologias" class="logo">
+
+  <div class="menu-grid">
+    <div class="card" onclick="navegar('recebimento.html')">
+      <i class="fas fa-dolly"></i>
+      <span>Recebimento</span>
+    </div>
+    <div class="card" onclick="navegar('armazenamento.html')">
+      <i class="fas fa-warehouse"></i>
+      <span>Armazenamento</span>
+    </div>
+    <div class="card" onclick="navegar('separacao.html')">
+      <i class="fas fa-box-open"></i>
+      <span>Separação</span>
+    </div>
+    <div class="card" onclick="navegar('conferencia_saida.html')">
+      <i class="fas fa-truck-loading"></i>
+      <span>Conferência Saída</span>
+    </div>
+    <div class="card" onclick="navegar('movimentacao.html')">
+      <i class="fas fa-exchange-alt"></i>
+      <span>Movimentação</span>
+    </div>
+    <div class="card" onclick="navegar('inventario.html')">
+      <i class="fas fa-clipboard-list"></i>
+      <span>Inventário</span>
+    </div>
+    <div class="card" onclick="navegar('packlist.html')">
+      <i class="fas fa-file-alt"></i>
+      <span>Packlist</span>
+    </div>
+    <div class="card" onclick="logout()">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Logout</span>
+    </div>
+  </div>
+
+  <script>
+    function navegar(pagina) {
+      window.location.href = pagina;
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "index.html";
+    }
+  </script>
+  <footer class="rodape">
+  <span>© 2025 Mantran Tecnologias</span>
+  <span>Versão 1.0 </span>
+</footer>
+</body>
+</html>

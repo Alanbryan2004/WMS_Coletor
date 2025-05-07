@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inventário - WMS Coletor</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: white;
+      margin: auto;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+      word-break: break-word;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      flex: 1 1 calc(33.333% - 10px);
+      min-width: 100px;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .limpar {
+      background-color: #ffe082; /* amarelo claro mais suave */
+    }
+
+    .finalizar {
+      background-color: #0d6efd; /* azul */
+      color: white;
+    }
+
+    .sair {
+      background-color: #e2e6ea;
+    }
+
+    @media (max-width: 360px) {
+      .buttons button {
+        flex: 1 1 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <label for="inventario">Número do Inventário</label>
+    <select id="inventario">
+      <option value="">Selecionar</option>
+      <option value="INV001">INV001</option>
+      <option value="INV002">INV002</option>
+    </select>
+
+    <label for="endereco">Lê Endereço</label>
+    <input type="text" id="endereco" placeholder="Digite ou escaneie" />
+
+    <label for="etiqueta">Lê Etiqueta</label>
+    <input type="text" id="etiqueta" placeholder="Digite ou escaneie" onkeydown="if(event.key==='Enter') adicionarEtiqueta()" />
+
+    <!-- Tabela com etiquetas -->
+    <table id="tabelaEtiquetas">
+      <thead>
+        <tr>
+          <th>Etiqueta</th>
+          <th>Produto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Linhas adicionadas dinamicamente -->
+      </tbody>
+    </table>
+
+    <div class="buttons">
+      <button class="limpar" onclick="limpar()">Limpar</button>
+      <button class="finalizar" onclick="finalizar()">Finalizar Contagem</button>
+      <button class="sair" onclick="sair()">Sair</button>
+    </div>
+  </div>
+
+  <script>
+    function adicionarEtiqueta() {
+      const etiquetaInput = document.getElementById("etiqueta");
+      const etiqueta = etiquetaInput.value.trim();
+      const produto = "Produto Simulado"; // Substitua por dados reais, se necessário
+
+      if (!etiqueta) return;
+
+      const tabela = document.getElementById("tabelaEtiquetas").getElementsByTagName("tbody")[0];
+      const novaLinha = tabela.insertRow();
+
+      const celulaEtiqueta = novaLinha.insertCell(0);
+      const celulaProduto = novaLinha.insertCell(1);
+
+      celulaEtiqueta.innerText = etiqueta;
+      celulaProduto.innerText = produto;
+
+      etiquetaInput.value = "";
+      etiquetaInput.focus();
+    }
+
+    function limpar() {
+      document.getElementById("inventario").value = "";
+      document.getElementById("endereco").value = "";
+      document.getElementById("etiqueta").value = "";
+      document.getElementById("tabelaEtiquetas").getElementsByTagName("tbody")[0].innerHTML = "";
+    }
+
+    function finalizar() {
+      alert("Contagem finalizada!");
+      // Aqui pode enviar os dados via API, se necessário
+    }
+
+    function sair() {
+      window.location.href = "menu.html";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - WMS Coletor</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .login-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      width: 300px;
+      text-align: center;
+    }
+    .logo {
+      width: 180px;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      margin-bottom: 1rem;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .remember-container {
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      margin: 10px 0;
+    }
+    .remember-container input {
+      margin-right: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #c00000;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #a00000;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <img src="Logo_Mantran.png" alt="Logo Mantran" class="logo">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="E-mail" required>
+      <input type="password" id="senha" placeholder="Senha" required>
+
+      <div class="remember-container">
+        <input type="checkbox" id="lembrar">
+        <label for="lembrar">Lembrar Senha</label>
+      </div>
+
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+
+  <script>
+    const emailInput = document.getElementById("email");
+    const senhaInput = document.getElementById("senha");
+    const lembrarCheck = document.getElementById("lembrar");
+
+    // Preenche os campos se já estiverem salvos
+    window.onload = function () {
+      const savedEmail = localStorage.getItem("savedEmail");
+      const savedSenha = localStorage.getItem("savedSenha");
+
+      if (savedEmail && savedSenha) {
+        emailInput.value = savedEmail;
+        senhaInput.value = savedSenha;
+        lembrarCheck.checked = true;
+      }
+    };
+
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const email = emailInput.value;
+      const senha = senhaInput.value;
+
+      if (lembrarCheck.checked) {
+        localStorage.setItem("savedEmail", email);
+        localStorage.setItem("savedSenha", senha);
+      } else {
+        localStorage.removeItem("savedEmail");
+        localStorage.removeItem("savedSenha");
+      }
+
+      if (email && senha) {
+        localStorage.setItem("user", email);
+        window.location.href = "menu.html";
+      } else {
+        alert("Preencha todos os campos.");
+      }
+    });
+  </script>
+</body>
+</html>

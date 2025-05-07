@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Conferência Saída - WMS Coletor</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 1rem;
+    }
+    .container {
+      max-width: 500px;
+      background: white;
+      margin: auto;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    .readonly {
+      background-color: #e9ecef;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .row > div {
+      flex: 1 1 48%;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      justify-content: space-between;
+    }
+    .buttons button {
+      flex: 1 1 30%;
+      padding: 12px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .confirmar {
+      background-color: #0d6efd;
+      color: white;
+    }
+    .finalizar {
+      background-color: #e2e6ea;
+      color: black;
+    }
+    .sair {
+      background-color: transparent;
+      color: black;
+      border: 1px solid #ccc;
+    }
+
+    @media (max-width: 400px) {
+      .row > div {
+        flex: 1 1 100%;
+      }
+      .buttons button {
+        flex: 1 1 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div>
+        <label for="agenda">Agenda</label>
+        <select id="agenda">
+          <option value="">Selecionar</option>
+        </select>
+      </div>
+      <div>
+        <label for="ordem">Nº OS</label>
+        <input type="text" id="ordem" class="readonly" readonly />
+      </div>
+    </div>
+
+    <label for="cliente">Cliente</label>
+    <input type="text" id="cliente" class="readonly" readonly />
+
+    <label for="etiqueta">Lê Etiqueta</label>
+    <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
+
+    <label for="produto">Lê Produto</label>
+    <input type="text" id="produto" placeholder="Digite ou escaneie" />
+
+    <label for="descricaoProduto">Descrição do Produto</label>
+    <input type="text" id="descricaoProduto" class="readonly" readonly />
+
+    <label for="lote">Qtd/Lote</label>
+    <input type="text" id="lote" placeholder="Digite ou escaneie" />
+
+    <div class="row">
+      <div>
+        <label for="qtdLida">QT Item Lido</label>
+        <input type="text" id="qtdLida" class="readonly" readonly />
+      </div>
+      <div>
+        <label for="qtdAConferir">Item a Conferir</label>
+        <input type="text" id="qtdAConferir" class="readonly" readonly />
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="volLido">QT Vol Lido</label>
+        <input type="text" id="volLido" class="readonly" readonly />
+      </div>
+      <div>
+        <label for="volAConferir">Vol a Conferir</label>
+        <input type="text" id="volAConferir" class="readonly" readonly />
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="confirmar" onclick="confirmar()">Confirmar</button>
+      <button class="finalizar" onclick="finalizar()">Finalizar</button>
+      <button class="sair" onclick="sair()">Sair</button>
+    </div>
+  </div>
+
+  <script>
+    function carregarAgenda() {
+      const agendaSelect = document.getElementById("agenda");
+      fetch('/api/agenda')
+        .then(response => response.json())
+        .then(data => {
+          data.agendas.forEach(agenda => {
+            const option = document.createElement("option");
+            option.value = agenda.id;
+            option.textContent = agenda.numero;
+            agendaSelect.appendChild(option);
+          });
+        })
+        .catch(error => console.error("Erro ao carregar agendas:", error));
+    }
+
+    function carregarDadosAgenda(agendaId) {
+      fetch(`/api/agenda/${agendaId}`)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById("ordem").value = data.ordemSeparacao;
+          document.getElementById("cliente").value = data.cliente;
+          document.getElementById("qtdAConferir").value = data.qtdItensAConferir;
+          document.getElementById("volAConferir").value = data.qtdVolumesAConferir;
+        })
+        .catch(error => console.error("Erro ao carregar dados da agenda:", error));
+    }
+
+    function confirmar() {
+      const etiqueta = document.getElementById("etiqueta").value;
+      const produto = document.getElementById("produto").value;
+
+      if (!etiqueta || !produto) {
+        alert("É necessário ler a etiqueta e o produto!");
+        return;
+      }
+
+      alert("Item conferido com sucesso!");
+    }
+
+    function finalizar() {
+      alert("Conferência finalizada com sucesso!");
+    }
+
+    function sair() {
+      window.location.href = "menu.html";
+    }
+
+    window.onload = () => {
+      carregarAgenda();
+      document.getElementById("agenda").addEventListener("change", function () {
+        const agendaId = this.value;
+        if (agendaId) {
+          carregarDadosAgenda(agendaId);
+        }
+      });
+    };
+  </script>
+</body>
+</html>

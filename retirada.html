@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Retirada - WMS Coletor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: nowrap;
+    }
+
+    .row > .form-group {
+      flex: 1;
+      min-width: 100px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background-color: white;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #eee;
+    }
+
+    .acoes {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin-top: 1.5rem;
+      gap: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .acoes button {
+      flex: 0 0 auto;
+      min-width: 120px;
+      padding: 10px;
+      font-weight: bold;
+      font-size: 14px;
+      border: none;
+      border-radius: 8px;
+      background-color: #c00000;
+      color: white;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .acoes button:hover {
+      background-color: #a00000;
+    }
+
+    .nowrap {
+      flex-wrap: nowrap !important;
+    }
+
+    @media (max-width: 600px) {
+      .row.nowrap {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Retirada de Mercadorias</h2>
+
+  <div class="form-group">
+    <label for="agenda">Agenda</label>
+    <select id="agenda">
+      <option value="">Selecione a agenda</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="codigo">Lê Produto (Código de Barras)</label>
+    <input type="text" id="codigo" placeholder="Escaneie o código de barras" oninput="iniciarLeitura()">
+  </div>
+
+  <div class="form-group">
+    <label for="descricao">Descrição do Produto</label>
+    <input type="text" id="descricao" disabled>
+  </div>
+
+  <div class="row nowrap">
+    <div class="form-group">
+      <label for="qtd">QTD</label>
+      <input type="text" id="qtd" disabled>
+    </div>
+    <div class="form-group">
+      <label for="nf">Nº NF</label>
+      <input type="text" id="nf" disabled>
+    </div>
+    <div class="form-group">
+      <label for="serie">Série</label>
+      <input type="text" id="serie" disabled>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+      <label for="qtdLidaItens">QTD Lida / Itens</label>
+      <input type="text" id="qtdLidaItens" disabled>
+    </div>
+    <div class="form-group">
+      <label for="qtdTotal">QTD Total</label>
+      <input type="text" id="qtdTotal" disabled>
+    </div>
+  </div>
+
+  <table id="tabela">
+    <thead>
+      <tr>
+        <th>CD_Produto</th>
+        <th>Descrição Produto</th>
+        <th>Qtd Item</th>
+        <th>Qtd Lido</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="acoes">
+    <button onclick="limparCampos()">Limpar</button>
+    <button onclick="zerarGrid()">Zerar</button>
+    <button onclick="finalizarAgenda()">Finalizar</button>
+    <button onclick="voltar()">Sair</button>
+  </div>
+
+  <script>
+    let itensLidos = [];
+    let timeout;
+
+    // Função para iniciar o debounce
+    function iniciarLeitura() {
+      clearTimeout(timeout);  // Cancela qualquer timeout anterior
+      timeout = setTimeout(adicionarProduto, 300);  // Chama a função adicionarProduto após 300ms
+    }
+
+    // Função para adicionar o produto
+    function adicionarProduto() {
+      const codigo = document.getElementById("codigo").value.trim();
+      if (!codigo) return;
+
+      const descricao = "Produto Exemplo";  // Substitua com lógica de busca de descrição real
+      const qtd = 10;  // Substitua com lógica de busca de quantidade real
+      const nf = "123456";  // Substitua com lógica de busca de número da nota fiscal real
+      const serie = "1";  // Substitua com lógica de busca de série real
+
+      // Preenche os campos com as informações do produto
+      document.getElementById("descricao").value = descricao;
+      document.getElementById("qtd").value = qtd;
+      document.getElementById("nf").value = nf;
+      document.getElementById("serie").value = serie;
+
+      // Verifica se o produto já foi lido, e se sim, atualiza a quantidade lida
+      const index = itensLidos.findIndex(p => p.codigo === codigo);
+      if (index >= 0) {
+        itensLidos[index].qtdLida += 1;
+      } else {
+        itensLidos.push({ codigo, descricao, qtdItem: qtd, qtdLida: 1 });
+      }
+
+      atualizarTotais();  // Atualiza os totais
+      renderGrid();  // Atualiza a tabela
+      document.getElementById("codigo").value = "";  // Limpa o campo de código
+      document.getElementById("codigo").focus();  // Foca novamente no campo de código
+    }
+
+    // Função para atualizar os totais
+    function atualizarTotais() {
+      const totalItens = itensLidos.reduce((sum, item) => sum + Number(item.qtdItem), 0);
+      const totalLidos = itensLidos.reduce((sum, item) => sum + Number(item.qtdLida), 0);
+
+      document.getElementById("qtdLidaItens").value = `${totalLidos} / ${totalItens}`;
+      document.getElementById("qtdTotal").value = totalItens;
+    }
+
+    // Função para renderizar a tabela de itens lidos
+    function renderGrid() {
+      const tbody = document.querySelector("#tabela tbody");
+      tbody.innerHTML = "";  // Limpa a tabela antes de renderizar
+      itensLidos.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.codigo}</td>
+          <td>${item.descricao}</td>
+          <td>${item.qtdItem}</td>
+          <td>${item.qtdLida}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Função para limpar todos os campos
+    function limparCampos() {
+      document.getElementById("codigo").value = "";
+      document.getElementById("descricao").value = "";
+      document.getElementById("qtd").value = "";
+      document.getElementById("nf").value = "";
+      document.getElementById("serie").value = "";
+      document.getElementById("qtdLidaItens").value = "";
+      document.getElementById("qtdTotal").value = "";
+      document.getElementById("codigo").focus();
+    }
+
+    // Função para zerar a lista de itens
+    function zerarGrid() {
+      itensLidos = [];
+      renderGrid();
+      limparCampos();
+    }
+
+    // Função para finalizar a agenda
+    function finalizarAgenda() {
+      alert("Agenda finalizada com sucesso!");
+    }
+
+    // Função para voltar à página anterior
+    function voltar() {
+      window.location.href = "packlist.html";
+    }
+  </script>
+
+</body>
+</html>
