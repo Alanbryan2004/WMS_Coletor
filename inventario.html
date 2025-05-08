@@ -14,10 +14,6 @@
       font-family: Arial, sans-serif;
       background: #f4f4f4;
       padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      padding-bottom: 80px; /* espaço para o rodapé */
     }
 
     .container {
@@ -103,45 +99,11 @@
       color: black;
     }
 
-    /* Rodapé */
-    .rodape {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background-color: #ffffff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
-      z-index: 999;
+    @media (max-width: 360px) {
+      .buttons {
+        flex-direction: column;
+      }
     }
-
-    .rodape .icones {
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .rodape .icones i {
-      font-size: 22px;
-      flex: 1;
-      text-align: center;
-      cursor: pointer;
-      color: #555;
-      transition: color 0.3s ease;
-    }
-
-    .rodape .icones i:hover {
-      color: #0d6efd;
-    }
-
-    .rodape .icones i.ativo {
-      color: #c00000;
-    }
-
   </style>
 </head>
 <body>
@@ -174,16 +136,9 @@
     <div class="buttons">
       <button class="limpar" onclick="limpar()">Limpar</button>
       <button class="finalizar" onclick="finalizar()">Finalizar</button>
+     
     </div>
   </div>
-
-  <footer class="rodape">
-    <div class="icones">
-      <i class="fas fa-arrow-left" onclick="voltar()"></i>
-      <i class="fas fa-home" id="homeIcon" onclick="irParaMenu()"></i>
-      <i class="fas fa-sign-out-alt" onclick="logout()"></i>
-    </div>
-  </footer>
 
   <script>
     function adicionarEtiqueta() {
@@ -219,25 +174,6 @@
 
     function sair() {
       window.location.href = "https://wms-coletor2.vercel.app/menu.html";
-    }
-
-    function voltar() {
-      window.history.back();
-    }
-
-    function irParaMenu() {
-      window.location.href = "https://wms-coletor2.vercel.app/menu.html";
-    }
-
-    function logout() {
-      localStorage.removeItem("user");
-      window.location.href = "https://wms-coletor2.vercel.app/index.html";
-    }
-
-    // Ativa ícone vermelho na página menu
-    if (window.location.pathname.includes("menu.html")) {
-      const homeIcon = document.getElementById("homeIcon");
-      if (homeIcon) homeIcon.classList.add("ativo");
     }
   </script>
 </body>
