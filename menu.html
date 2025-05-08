@@ -72,26 +72,26 @@
       bottom: 0;
       width: 100%;
       background-color: #ffffff;
-      border-top: 1px solid #ddd;
-      color: #555;
-      font-size: 12px;
-      padding: 10px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 999;
+      padding: 10px 20px;
       box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+      z-index: 999;
     }
 
     .rodape .icones {
       display: flex;
-      gap: 15px;
+      width: 100%;
+      justify-content: space-between;
     }
 
     .rodape .icones i {
       font-size: 20px;
       cursor: pointer;
       transition: color 0.3s ease;
+      flex: 1;
+      text-align: center;
     }
 
     .rodape .icones i:hover {
@@ -163,8 +163,6 @@
       <i class="fas fa-home" onclick="irParaMenu()"></i>
       <i class="fas fa-sign-out-alt" onclick="logout()"></i>
     </div>
-    <span>© 2025 Mantran Tecnologias</span>
-    <span>Versão 1.0</span>
   </footer>
 </body>
 </html>
