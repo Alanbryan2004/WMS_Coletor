@@ -13,6 +13,9 @@
       font-family: Arial, sans-serif;
       background: #f4f4f4;
       padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
     .container {
       max-width: 500px;
@@ -21,6 +24,7 @@
       padding: 1.5rem;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      flex-grow: 1;
     }
     label {
       font-weight: bold;
@@ -72,6 +76,45 @@
       background-color: transparent;
       color: black;
       border: 1px solid #ccc;
+    }
+
+    /* Estilo do rodapé */
+    footer.rodape {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+    }
+
+    .rodape .icones {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rodape .icones i {
+      font-size: 22px;
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      color: #555;
+      transition: color 0.3s ease;
+    }
+
+    .rodape .icones i:hover {
+      color: #0d6efd;
+    }
+
+    .rodape .icones i.ativo {
+      color: #c00000;
     }
   </style>
 </head>
@@ -130,6 +173,16 @@
     </div>
   </div>
 
+  <!-- Rodapé com ícones -->
+  <footer class="rodape">
+    <div class="icones">
+      <i class="fas fa-arrow-left" onclick="voltar()"></i>
+      <i class="fas fa-home" onclick="irParaMenu()"></i>
+      <i class="fas fa-sign-out-alt" onclick="logout()"></i>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
   <script>
     function carregarAgenda() {
       const agendaSelect = document.getElementById("agenda");
@@ -174,8 +227,16 @@
       alert("Conferência finalizada com sucesso!");
     }
 
-    function sair() {
-      window.location.href = "https://wms-coletor2.vercel.app/menu.html";
+    function voltar() {
+      window.history.back();
+    }
+
+    function irParaMenu() {
+      window.location.href = 'menu.html';
+    }
+
+    function logout() {
+      window.location.href = 'index.html';
     }
 
     window.onload = () => {
