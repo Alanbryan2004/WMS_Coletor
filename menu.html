@@ -11,7 +11,10 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f4f4f4;
-      padding: 2rem 1rem 5rem; /* padding inferior maior por causa do rodapé fixo */
+      padding: 2rem 1rem 5rem; /* Ajustei padding inferior maior por causa do rodapé fixo */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
 
     img.logo {
@@ -22,27 +25,28 @@
 
     .menu-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
+      grid-template-columns: repeat(2, 1fr); /* Dois cards por linha */
+      gap: 12px; /* Reduzi o espaço entre os cards */
       width: 100%;
       max-width: 600px;
       margin: auto;
+      overflow: hidden;
     }
 
     .card {
       background: white;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      padding: 1rem;
+      padding: 0.8rem; /* Reduzi o padding interno */
       text-align: center;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      min-height: 120px; /* Reduzi a altura mínima */
-      max-height: 130px; /* Reduzi a altura máxima */
+      min-height: 110px; /* Ajustei para ficar menor */
+      max-height: 120px; /* Ajustei para ficar menor */
       display: flex;
       flex-direction: column;
-      justify-content: center; /* Alinha verticalmente o conteúdo */
-      align-items: center; /* Alinha horizontalmente o conteúdo */
+      justify-content: center;
+      align-items: center;
     }
 
     .card:hover {
