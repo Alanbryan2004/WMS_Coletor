@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Menu - WMS Coletor</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -15,7 +15,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 2rem 1rem 70px; /* espaço inferior para o rodapé */
+      padding: 20px 10px 80px; /* espaço para o rodapé */
+      box-sizing: border-box;
     }
 
     img.logo {
@@ -28,14 +29,14 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 16px;
       width: 100%;
-      max-width: 600px;
+      max-width: 500px;
     }
 
     .card {
       background: white;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      padding: 1.2rem;
+      padding: 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -51,7 +52,7 @@
     }
 
     .card i {
-      font-size: 24px;
+      font-size: 26px;
       margin-bottom: 10px;
       color: #c00000;
     }
@@ -102,7 +103,7 @@
   </style>
 </head>
 <body>
-  <img src="Logo_Mantran.png" alt="Logo Mantran Tecnologias" class="logo">
+  <img src="Logo_Mantran.png" alt="Logo Mantran Tecnologias" class="logo"/>
 
   <div class="menu-grid">
     <div class="card" onclick="navegar('recebimento.html')">
@@ -165,9 +166,8 @@
       window.location.href = 'https://wms-coletor2.vercel.app/index.html';
     }
 
-    // Destacar ícone Home se estiver na página menu.html
-    const path = window.location.pathname;
-    if (path.includes("menu.html")) {
+    // Ativa ícone vermelho na página menu
+    if (window.location.pathname.includes("menu.html")) {
       const homeIcon = document.getElementById("homeIcon");
       if (homeIcon) homeIcon.classList.add("ativo");
     }
