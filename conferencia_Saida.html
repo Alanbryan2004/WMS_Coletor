@@ -179,7 +179,7 @@
     </div>
   </div>
 
-  <footer class="rodape">
+ <footer class="rodape">
     <div class="icones">
       <i class="fas fa-arrow-left" onclick="voltar()"></i>
       <i class="fas fa-home" onclick="irParaMenu()"></i>
@@ -188,6 +188,14 @@
   </footer>
 
   <script>
+    function confirmar() {
+      alert("Produto armazenado!");
+    }
+
+    function finalizar() {
+      alert("Armazenagem finalizada!");
+    }
+
     function voltar() {
       window.history.back();
     }
@@ -198,14 +206,6 @@
 
     function logout() {
       window.location.href = 'index.html';
-    }
-
-    function confirmar() {
-      alert("Função Confirmar executada.");
-    }
-
-    function finalizar() {
-      alert("Conferência finalizada com sucesso!");
     }
   </script>
 </body>
