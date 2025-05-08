@@ -50,19 +50,19 @@
     <button onclick="navegar('separacao.html')">Separação</button>
     <button onclick="navegar('conferencia_saida.html')">Conferência Saída</button>
     <button onclick="navegar('movimentacao.html')">Movimentação</button>
-    <button onclick="window.location.href='inventario.html'">Inventário</button>
-    <button onclick="window.location.href='packlist.html'">Packlist</button>
+    <button onclick="navegar('inventario.html')">Inventário</button>
+    <button onclick="navegar('packlist.html')">Packlist</button>
     <button onclick="logout()">Logout</button>
   </div>
 
   <script>
     function navegar(pagina) {
-      window.location.href = pagina;
+      window.location.href = 'https://wms-coletor2.vercel.app/' + pagina;
     }
 
     function logout() {
       localStorage.removeItem("user");
-      window.location.href = "index.html";
+      window.location.href = "https://wms-coletor2.vercel.app/index.html";
     }
   </script>
 </body>
