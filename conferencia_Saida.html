@@ -22,12 +22,16 @@
       padding-bottom: 60px; /* Dando espaço para o rodapé */
     }
     .container {
+      width: 100%;
       max-width: 500px;
       background: white;
-      margin: auto;
       padding: 1.5rem;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      min-height: calc(100vh - 120px); /* Espaço para o rodapé */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     label {
       font-weight: bold;
@@ -118,6 +122,12 @@
 
     .rodape .icones i.ativo {
       color: #c00000;
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 1rem;
+      }
     }
   </style>
 </head>
