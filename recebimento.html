@@ -4,345 +4,206 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Recebimento - WMS Coletor</title>
-  <style>
-    * { box-sizing: border-box; }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    html, body {
+  <style>
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
       font-family: Arial, sans-serif;
       background: #f4f4f4;
-    }
-
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
-      padding: 1rem;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 500px;
-      background: white;
-      padding: 1.5rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-      min-height: calc(100vh - 60px); /* deixa espaço pro rodapé */
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px 10px 80px;
+      box-sizing: border-box;
     }
 
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 10px;
+    h1 {
+      font-size: 22px;
+      color: #333;
+      margin-bottom: 20px;
     }
 
-    input, select {
+    .form-group {
+      display: flex;
+      flex-direction: column;
       width: 100%;
+      max-width: 400px;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .form-group input {
       padding: 10px;
-      margin-top: 5px;
-      margin-bottom: 10px;
-      border-radius: 5px;
+      border-radius: 6px;
       border: 1px solid #ccc;
-      font-size: 1rem;
+      font-size: 16px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      margin: 10px 5px;
+      border: none;
+      border-radius: 6px;
+      background-color: #c00000;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #a00000;
     }
 
     .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 10px;
-    }
-
-    .readonly {
-      background-color: #e9ecef;
-    }
-
-    .inline-group {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 5px;
-    }
-
-    .inline-group > label {
-      margin: 0;
-    }
-
-    .inline-fields {
-      display: flex;
-      gap: 10px;
-    }
-
-    .inline-fields .field {
-      flex: 1;
-    }
-
-    .buttons {
-      display: flex;
-      justify-content: space-between;
+      width: 100%;
+      max-width: 600px;
+      border-collapse: collapse;
       margin-top: 20px;
     }
 
-    .buttons button {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 1rem;
-      margin-right: 10px;
+    .grid th,
+    .grid td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+      font-size: 14px;
     }
 
-    .buttons button:last-child {
-      margin-right: 0;
+    .grid th {
+      background-color: #c00000;
+      color: white;
     }
 
-    .confirmar { background-color: #0d6efd; color: white; }
-    .finalizar { background-color: #e2e6ea; color: black; }
-
-    .mensagem-final {
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-      padding: 10px;
-      margin-top: 20px;
-      border-radius: 5px;
-      display: none;
-    }
-
-    footer {
+    .rodape {
       position: fixed;
       bottom: 0;
       left: 0;
-      width: 100%;
-      background: #f8f9fa;
-      border-top: 1px solid #ccc;
+      right: 0;
+      background-color: #ffffff;
       display: flex;
       justify-content: space-between;
-      padding: 5px 20px;
-      z-index: 1000;
+      align-items: center;
+      padding: 10px 20px;
+      box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+      z-index: 999;
     }
 
-    footer a {
-      flex: 1;
-      text-align: center;
-      text-decoration: none;
-      color: black;
-      font-size: 0.9rem;
-    }
-
-    footer a div {
+    .rodape .icones {
       display: flex;
-      flex-direction: column;
+      width: 100%;
+      justify-content: space-between;
       align-items: center;
     }
 
-    footer a img {
-      width: 24px;
-      height: 24px;
-      margin-bottom: 3px;
+    .rodape .icones i {
+      font-size: 22px;
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      color: #555;
+      transition: color 0.3s ease;
     }
 
+    .rodape .icones i:hover {
+      color: #0d6efd;
+    }
+
+    .rodape .icones i.ativo {
+      color: #c00000;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div>
-      <div class="inline-fields">
-        <div class="field">
-          <label for="agenda">Agenda</label>
-          <select id="agendaSelect">
-            <option value="">Selecionar</option>
-            <option value="000001">000001</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="nf">Nº NF</label>
-          <select id="nf">
-            <option value="">Selecionar</option>
-          </select>
-        </div>
-      </div>
+  <h1>Recebimento</h1>
 
-      <label for="etiqueta">Lê Etiqueta</label>
-      <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
-
-      <div class="inline-group">
-        <label for="produto" style="flex: 2;">Lê Produto</label>
-        <label style="flex: 1; display: flex; align-items: center; white-space: nowrap;">
-          <input type="checkbox" id="volume" style="margin-right: 5px;" /> Volume Paletizado
-        </label>
-      </div>
-      <input type="text" id="produto" placeholder="Digite ou escaneie" />
-
-      <div class="grid">
-        <div>
-          <label>Qtde Itens</label>
-          <input type="text" id="qtdItens" value="0" readonly />
-        </div>
-        <div>
-          <label>Item Lido / Conferir</label>
-          <input type="text" id="itemLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
-        </div>
-        <div>
-          <label>Qtde Vols</label>
-          <input type="text" id="qtdVols" value="0" readonly />
-        </div>
-        <div>
-          <label>Vol Lido / Conferir</label>
-          <input type="text" id="volLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
-        </div>
-      </div>
-
-      <label for="cliente">Cliente</label>
-      <input type="text" readonly class="readonly" id="cliente" />
-
-      <div id="itensRecebimento"></div>
-
-      <div class="mensagem-final" id="mensagem">
-        Conferência Finalizada com Sucesso!
-      </div>
-    </div>
-
-    <div class="buttons">
-      <button class="confirmar" onclick="confirmar()">Confirmar</button>
-      <button class="finalizar" onclick="finalizar()">Finalizar</button>
-    </div>
+  <div class="form-group">
+    <label for="codigo">Ler Código de Barras:</label>
+    <input type="text" id="codigo" oninput="lerProduto(event)" autofocus autocomplete="off" />
   </div>
 
-  <footer>
-    <a href="menu.html">
-      <div>
-        <img src="img/home.png" alt="Menu" />
-        <span>Menu</span>
-      </div>
-    </a>
-    <a href="recebimento.html">
-      <div>
-        <img src="img/recebimento.png" alt="Receber" />
-        <span>Receber</span>
-      </div>
-    </a>
-    <a href="armazenamento.html">
-      <div>
-        <img src="img/armazenamento.png" alt="Armazenar" />
-        <span>Armazenar</span>
-      </div>
-    </a>
-    <a href="retirada.html">
-      <div>
-        <img src="img/retirada.png" alt="Retirar" />
-        <span>Retirar</span>
-      </div>
-    </a>
+  <table class="grid" id="tabela">
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Descrição</th>
+        <th>Qtd</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <button class="btn" onclick="finalizar()">Finalizar</button>
+
+  <footer class="rodape">
+    <div class="icones">
+      <i class="fas fa-arrow-left" onclick="voltar()"></i>
+      <i class="fas fa-home" id="homeIcon" onclick="irParaMenu()"></i>
+      <i class="fas fa-sign-out-alt" onclick="logout()"></i>
+    </div>
   </footer>
 
   <script>
-    let totalItens = 0;
-    let itemLidoCount = 0;
-    let volLidoCount = 0;
-    let produtoMap = {};
-    let etiquetasLidas = new Set();
+    let produtos = [];
 
-    document.getElementById("agendaSelect").addEventListener("change", (e) => {
-      const nfSelect = document.getElementById("nf");
-      nfSelect.innerHTML = "<option value=''>Selecionar</option>";
+    function lerProduto(event) {
+      const codigo = event.target.value.trim();
+      if (codigo.length < 6) return;
 
-      if (e.target.value === "000001") {
-        const option = document.createElement("option");
-        option.value = "102030";
-        option.textContent = "102030";
-        nfSelect.appendChild(option);
-
-        totalItens = 10;
-        itemLidoCount = 0;
-        volLidoCount = 0;
-        produtoMap = {};
-        etiquetasLidas = new Set();
-
-        document.getElementById("itemLido").value = `0/${totalItens}`;
-        document.getElementById("volLido").value = `0/${totalItens}`;
-        document.getElementById("mensagem").style.display = "none";
-
-        document.getElementById("etiqueta").disabled = false;
-        document.getElementById("produto").disabled = false;
-        document.querySelector(".confirmar").disabled = false;
-      }
-    });
-
-    document.getElementById("produto").addEventListener("input", () => {
-      document.getElementById("qtdItens").value = "1";
-      document.getElementById("qtdVols").value = "1";
-    });
-
-    document.getElementById("etiqueta").addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        document.getElementById("produto").focus();
-      }
-    });
-
-    document.getElementById("produto").addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        confirmar();
-      }
-    });
-
-    document.getElementById("nf").addEventListener("change", (e) => {
-      const clienteInput = document.getElementById("cliente");
-      if (e.target.value) {
-        clienteInput.value = "Mantran Tecnologias Ltda";
+      const existente = produtos.find(p => p.codigo === codigo);
+      if (existente) {
+        existente.qtd++;
       } else {
-        clienteInput.value = "";
-      }
-    });
-
-    function confirmar() {
-      const etiqueta = document.getElementById("etiqueta").value.trim();
-      const produto = document.getElementById("produto").value.trim();
-
-      if (!etiqueta || !produto) return;
-
-      if (etiquetasLidas.has(etiqueta)) {
-        alert("Esta etiqueta já foi lida! Digite uma etiqueta diferente.");
-        document.getElementById("etiqueta").value = '';
-        document.getElementById("etiqueta").focus();
-        return;
+        produtos.push({ codigo, descricao: "Produto XYZ", qtd: 1 });
       }
 
-      etiquetasLidas.add(etiqueta);
+      atualizarTabela();
+      event.target.value = '';
+    }
 
-      if (itemLidoCount < totalItens) {
-        itemLidoCount++;
-        volLidoCount++;
-        document.getElementById("itemLido").value = `${itemLidoCount}/${totalItens}`;
-        document.getElementById("volLido").value = `${volLidoCount}/${totalItens}`;
-        const codigo = document.getElementById("produto").value.trim();
-        if (codigo) {
-          produtoMap[codigo] = (produtoMap[codigo] || 0) + 1;
-        }
-        if (itemLidoCount === totalItens) {
-          document.getElementById("mensagem").style.display = "block";
-          document.getElementById("etiqueta").disabled = true;
-          document.getElementById("produto").disabled = true;
-          document.querySelector(".confirmar").disabled = true;
-        }
-      }
-      document.getElementById("etiqueta").value = '';
-      document.getElementById("produto").value = '';
-      document.getElementById("qtdItens").value = '0';
-      document.getElementById("qtdVols").value = '0';
-      document.getElementById("etiqueta").focus();
+    function atualizarTabela() {
+      const tbody = document.querySelector("#tabela tbody");
+      tbody.innerHTML = '';
+      produtos.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p.codigo}</td>
+          <td>${p.descricao}</td>
+          <td>${p.qtd}</td>
+        `;
+        tbody.appendChild(tr);
+      });
     }
 
     function finalizar() {
-      alert("Recebimento finalizado!");
+      alert("Recebimento finalizado com sucesso!");
+      produtos = [];
+      atualizarTabela();
+    }
+
+    function voltar() {
+      window.history.back();
+    }
+
+    function irParaMenu() {
+      window.location.href = 'https://wms-coletor2.vercel.app/menu.html';
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = 'https://wms-coletor2.vercel.app/index.html';
+    }
+
+    // Ativa ícone vermelho na tela correta
+    if (window.location.pathname.includes("recebimento.html")) {
+      const homeIcon = document.getElementById("homeIcon");
+      if (homeIcon) homeIcon.classList.add("ativo");
     }
   </script>
 </body>
