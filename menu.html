@@ -33,12 +33,16 @@
       background: white;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      padding: 1rem; /* Diminuí o padding para diminuir o tamanho */
+      padding: 1rem;
       text-align: center;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      min-height: 120px; /* Reduzi a altura mínima */
-      max-height: 160px; /* Limitei a altura máxima para evitar rolagem */
+      min-height: 130px; /* Reduzi um pouco a altura */
+      max-height: 150px; /* Limitei a altura máxima para evitar rolagem */
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* Alinha verticalmente o conteúdo */
+      align-items: center; /* Alinha horizontalmente o conteúdo */
     }
 
     .card:hover {
@@ -47,8 +51,8 @@
     }
 
     .card i {
-      font-size: 24px; /* Tamanho de ícone ajustado */
-      margin-bottom: 8px; /* Diminuí o espaçamento entre o ícone e o texto */
+      font-size: 24px;
+      margin-bottom: 8px;
       color: #c00000; /* Cor vermelha Mantran */
     }
 
