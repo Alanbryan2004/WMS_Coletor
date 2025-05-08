@@ -4,84 +4,96 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Recebimento - WMS Coletor</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f4f4f4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 20px 10px 80px;
-      box-sizing: border-box;
+      padding-bottom: 80px; /* espaço para o rodapé */
     }
 
-    h1 {
-      font-size: 22px;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 400px;
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #333;
-    }
-
-    .form-group input {
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-
-    .btn {
-      padding: 10px 20px;
-      margin: 10px 5px;
-      border: none;
-      border-radius: 6px;
+    header {
       background-color: #c00000;
       color: white;
-      font-size: 16px;
-      cursor: pointer;
+      padding: 10px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
     }
 
-    .btn:hover {
-      background-color: #a00000;
+    .container {
+      padding: 15px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+
+    .input-group label {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .input-group input,
+    .input-group select {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
     }
 
     .grid {
-      width: 100%;
-      max-width: 600px;
-      border-collapse: collapse;
       margin-top: 20px;
+      background: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
-    .grid th,
-    .grid td {
-      border: 1px solid #ddd;
-      padding: 8px;
+    .grid table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .grid th, .grid td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
       text-align: left;
       font-size: 14px;
     }
 
     .grid th {
-      background-color: #c00000;
+      background: #c00000;
       color: white;
     }
 
-    .rodape {
+    .botoes {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .botoes button {
+      flex: 1;
+      padding: 12px;
+      background-color: #c00000;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .botoes button:hover {
+      background-color: #a00000;
+    }
+
+    footer.rodape {
       position: fixed;
       bottom: 0;
       left: 0;
@@ -121,25 +133,50 @@
   </style>
 </head>
 <body>
-  <h1>Recebimento</h1>
+  <header>Recebimento</header>
 
-  <div class="form-group">
-    <label for="codigo">Ler Código de Barras:</label>
-    <input type="text" id="codigo" oninput="lerProduto(event)" autofocus autocomplete="off" />
+  <div class="container">
+    <div class="input-group">
+      <label for="agenda">Agenda</label>
+      <select id="agenda">
+        <option value="">Selecione uma agenda</option>
+        <option value="agenda1">Agenda 1</option>
+        <option value="agenda2">Agenda 2</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label for="romaneio">Romaneio</label>
+      <input type="text" id="romaneio" placeholder="Digite ou leia o romaneio" />
+    </div>
+
+    <div class="input-group">
+      <label for="produto">Lê Produto</label>
+      <input type="text" id="produto" placeholder="Leia o código de barras" />
+    </div>
+
+    <div class="grid">
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Descrição</th>
+            <th>Qtd</th>
+          </tr>
+        </thead>
+        <tbody id="tabela-produtos">
+          <!-- Linhas inseridas dinamicamente -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="botoes">
+      <button onclick="confirmar()">Confirmar</button>
+      <button onclick="finalizar()">Finalizar</button>
+      <button onclick="zerar()">Zerar</button>
+      <button onclick="limpar()">Limpar</button>
+    </div>
   </div>
-
-  <table class="grid" id="tabela">
-    <thead>
-      <tr>
-        <th>Produto</th>
-        <th>Descrição</th>
-        <th>Qtd</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <button class="btn" onclick="finalizar()">Finalizar</button>
 
   <footer class="rodape">
     <div class="icones">
@@ -150,43 +187,6 @@
   </footer>
 
   <script>
-    let produtos = [];
-
-    function lerProduto(event) {
-      const codigo = event.target.value.trim();
-      if (codigo.length < 6) return;
-
-      const existente = produtos.find(p => p.codigo === codigo);
-      if (existente) {
-        existente.qtd++;
-      } else {
-        produtos.push({ codigo, descricao: "Produto XYZ", qtd: 1 });
-      }
-
-      atualizarTabela();
-      event.target.value = '';
-    }
-
-    function atualizarTabela() {
-      const tbody = document.querySelector("#tabela tbody");
-      tbody.innerHTML = '';
-      produtos.forEach(p => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${p.codigo}</td>
-          <td>${p.descricao}</td>
-          <td>${p.qtd}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function finalizar() {
-      alert("Recebimento finalizado com sucesso!");
-      produtos = [];
-      atualizarTabela();
-    }
-
     function voltar() {
       window.history.back();
     }
@@ -200,10 +200,50 @@
       window.location.href = 'https://wms-coletor2.vercel.app/index.html';
     }
 
-    // Ativa ícone vermelho na tela correta
     if (window.location.pathname.includes("recebimento.html")) {
-      const homeIcon = document.getElementById("homeIcon");
-      if (homeIcon) homeIcon.classList.add("ativo");
+      document.getElementById("homeIcon").classList.add("ativo");
+    }
+
+    function confirmar() {
+      alert('Produto confirmado!');
+    }
+
+    function finalizar() {
+      alert('Recebimento finalizado!');
+    }
+
+    function zerar() {
+      document.getElementById("produto").value = '';
+    }
+
+    function limpar() {
+      document.getElementById("romaneio").value = '';
+      document.getElementById("produto").value = '';
+      document.getElementById("tabela-produtos").innerHTML = '';
+    }
+
+    // Simulando leitura de código de barras
+    document.getElementById("produto").addEventListener("input", function (e) {
+      const codigo = e.target.value.trim();
+      if (codigo.length >= 8) { // Simulando leitura
+        adicionarProduto(codigo);
+        e.target.value = "";
+      }
+    });
+
+    function adicionarProduto(codigo) {
+      const tabela = document.getElementById("tabela-produtos");
+      let linhaExistente = Array.from(tabela.rows).find(row => row.cells[0].innerText === codigo);
+
+      if (linhaExistente) {
+        let qtdCell = linhaExistente.cells[2];
+        qtdCell.innerText = parseInt(qtdCell.innerText) + 1;
+      } else {
+        let novaLinha = tabela.insertRow();
+        novaLinha.insertCell(0).innerText = codigo;
+        novaLinha.insertCell(1).innerText = "Descrição do produto";
+        novaLinha.insertCell(2).innerText = 1;
+      }
     }
   </script>
 </body>
