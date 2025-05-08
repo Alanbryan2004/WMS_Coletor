@@ -68,14 +68,12 @@
     .buttons {
       display: flex;
       justify-content: space-between;
-      flex-wrap: wrap;
-      margin-top: 20px;
       gap: 10px;
+      margin-top: 20px;
     }
 
     .buttons button {
-      flex: 1 1 30%;
-      min-width: 90px;
+      flex: 1;
       padding: 12px;
       border: none;
       border-radius: 5px;
@@ -101,10 +99,6 @@
     @media (max-width: 400px) {
       .buttons {
         flex-direction: column;
-      }
-
-      .buttons button {
-        width: 100%;
       }
     }
   </style>
@@ -138,7 +132,7 @@
 
     <div class="buttons">
       <button class="limpar" onclick="limpar()">Limpar</button>
-      <button class="finalizar" onclick="finalizar()">Finalizar Contagem</button>
+      <button class="finalizar" onclick="finalizar()">Finalizar</button>
       <button class="sair" onclick="sair()">Sair</button>
     </div>
   </div>
@@ -147,18 +141,18 @@
     function adicionarEtiqueta() {
       const etiquetaInput = document.getElementById("etiqueta");
       const etiqueta = etiquetaInput.value.trim();
-      const produto = "Produto Simulado"; // Substitua com dados reais do backend
+      const produto = "Produto Simulado"; // Substitua por dados reais, se necessário
 
       if (!etiqueta) return;
 
-      const tabela = document.getElementById("tabelaEtiquetas").querySelector("tbody");
+      const tabela = document.getElementById("tabelaEtiquetas").getElementsByTagName("tbody")[0];
       const novaLinha = tabela.insertRow();
 
       const celulaEtiqueta = novaLinha.insertCell(0);
       const celulaProduto = novaLinha.insertCell(1);
 
-      celulaEtiqueta.textContent = etiqueta;
-      celulaProduto.textContent = produto;
+      celulaEtiqueta.innerText = etiqueta;
+      celulaProduto.innerText = produto;
 
       etiquetaInput.value = "";
       etiquetaInput.focus();
@@ -168,7 +162,7 @@
       document.getElementById("inventario").value = "";
       document.getElementById("endereco").value = "";
       document.getElementById("etiqueta").value = "";
-      document.getElementById("tabelaEtiquetas").querySelector("tbody").innerHTML = "";
+      document.getElementById("tabelaEtiquetas").getElementsByTagName("tbody")[0].innerHTML = "";
     }
 
     function finalizar() {
