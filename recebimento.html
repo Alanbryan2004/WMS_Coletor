@@ -3,18 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Retirada - WMS Coletor</title>
+  <title>Recebimento - WMS Coletor</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    body {
+    * { box-sizing: border-box; }
+
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: Arial, sans-serif;
       background: #f4f4f4;
+    }
+
+    body {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px 10px 120px; /* Aumento do espaço inferior para acomodar os botões */
-      box-sizing: border-box;
+      justify-content: center;
+      align-items: stretch;
+      padding: 1rem;
+      padding-bottom: 80px; /* espaço para o rodapé fixo */
     }
 
     .container {
@@ -24,62 +31,56 @@
       padding: 1.5rem;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    h2 {
-      margin-top: 0;
-      color: #c00000;
-      text-align: center;
-    }
-
-    .input-group {
+      min-height: 100vh;
       display: flex;
-      align-items: center;
-      margin-bottom: 1rem;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    .input-group label {
-      width: 120px;
+    label {
       font-weight: bold;
+      display: block;
+      margin-top: 10px;
     }
 
-    .input-group input, .input-group select {
-      flex: 1;
-      padding: 8px;
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 10px;
       border-radius: 5px;
       border: 1px solid #ccc;
-    }
-
-    .product-info {
-      background: #f9f9f9;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 1rem;
-      border: 1px solid #ddd;
+      font-size: 1rem;
     }
 
     .grid {
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      overflow: hidden;
-      margin-bottom: 1rem;
-    }
-
-    .grid-header, .grid-row {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      padding: 10px;
-      font-weight: bold;
-      background-color: #eee;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
     }
 
-    .grid-row {
-      background-color: #fff;
-      font-weight: normal;
+    .readonly {
+      background-color: #e9ecef;
     }
 
-    .grid-row:nth-child(even) {
-      background-color: #f7f7f7;
+    .inline-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .inline-group > label {
+      margin: 0;
+    }
+
+    .inline-fields {
+      display: flex;
+      gap: 10px;
+    }
+
+    .inline-fields .field {
+      flex: 1;
     }
 
     .buttons {
@@ -90,22 +91,34 @@
 
     .buttons button {
       flex: 1;
-      margin: 0 5px;
       padding: 10px;
       border: none;
       border-radius: 5px;
-      background-color: #c00000;
-      color: white;
-      font-weight: bold;
       cursor: pointer;
-      transition: background 0.3s ease;
+      font-weight: bold;
+      font-size: 1rem;
+      margin-right: 10px;
     }
 
-    .buttons button:hover {
-      background-color: #a00000;
+    .buttons button:last-child {
+      margin-right: 0;
     }
 
-    .rodape {
+    .confirmar { background-color: #0d6efd; color: white; }
+    .finalizar { background-color: #e2e6ea; color: black; }
+    .sair { background-color: transparent; color: black; border: 1px solid #ccc; }
+
+    .mensagem-final {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 5px;
+      display: none;
+    }
+
+    footer.rodape {
       position: fixed;
       bottom: 0;
       left: 0;
@@ -146,51 +159,67 @@
 </head>
 <body>
   <div class="container">
-    <h2>Retirada de Mercadorias</h2>
-
-    <div class="input-group">
-      <label for="agenda">Agenda:</label>
-      <select id="agenda">
-        <option value="">Selecione</option>
-        <option value="1">Agenda 1</option>
-        <option value="2">Agenda 2</option>
-      </select>
-    </div>
-
-    <div class="input-group">
-      <label for="leitura">Lê Produto:</label>
-      <input type="text" id="leitura" placeholder="Escaneie o código"/>
-    </div>
-
-    <div class="product-info">
-      <div><strong>Produto:</strong> Nome do Produto</div>
-      <div><strong>Endereço:</strong> A01-01-01</div>
-      <div><strong>Quantidade:</strong> 10</div>
-    </div>
-
-    <div class="grid">
-      <div class="grid-header">
-        <div>Produto</div>
-        <div>Endereço</div>
-        <div>Qtd</div>
+    <div>
+      <div class="inline-fields">
+        <div class="field">
+          <label for="agenda">Agenda</label>
+          <select id="agendaSelect">
+            <option value="">Selecionar</option>
+            <option value="000001">000001</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="nf">Nº NF</label>
+          <select id="nf">
+            <option value="">Selecionar</option>
+          </select>
+        </div>
       </div>
-      <div class="grid-row">
-        <div>Produto X</div>
-        <div>B02-03-01</div>
-        <div>5</div>
+
+      <label for="etiqueta">Lê Etiqueta</label>
+      <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
+
+      <div class="inline-group">
+        <label for="produto" style="flex: 2;">Lê Produto</label>
+        <label style="flex: 1; display: flex; align-items: center; white-space: nowrap;">
+          <input type="checkbox" id="volume" style="margin-right: 5px;" /> Volume Paletizado
+        </label>
       </div>
-      <div class="grid-row">
-        <div>Produto Y</div>
-        <div>C01-02-02</div>
-        <div>3</div>
+      <input type="text" id="produto" placeholder="Digite ou escaneie" />
+
+      <div class="grid">
+        <div>
+          <label>Qtde Itens</label>
+          <input type="text" id="qtdItens" value="0" readonly />
+        </div>
+        <div>
+          <label>Item Lido / Conferir</label>
+          <input type="text" id="itemLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+        </div>
+        <div>
+          <label>Qtde Vols</label>
+          <input type="text" id="qtdVols" value="0" readonly />
+        </div>
+        <div>
+          <label>Vol Lido / Conferir</label>
+          <input type="text" id="volLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+        </div>
+      </div>
+
+      <label for="cliente">Cliente</label>
+      <input type="text" readonly class="readonly" id="cliente" />
+
+      <div id="itensRecebimento"></div>
+
+      <div class="mensagem-final" id="mensagem">
+        Conferência Finalizada com Sucesso!
       </div>
     </div>
 
     <div class="buttons">
-      <button onclick="limpar()">Limpar</button>
-      <button onclick="zerar()">Zerar</button>
-      <button onclick="finalizar()">Finalizar</button>
-      <button onclick="sair()">Sair</button>
+      <button class="confirmar" onclick="confirmar()">Confirmar</button>
+      <button class="finalizar" onclick="finalizar()">Finalizar</button>
+      <button class="sair" onclick="sair()">Sair</button>
     </div>
   </div>
 
@@ -203,39 +232,123 @@
   </footer>
 
   <script>
+    let totalItens = 0;
+    let itemLidoCount = 0;
+    let volLidoCount = 0;
+    let produtoMap = {};
+    let etiquetasLidas = new Set();
+
+    document.getElementById("agendaSelect").addEventListener("change", (e) => {
+      const nfSelect = document.getElementById("nf");
+      nfSelect.innerHTML = "<option value=''>Selecionar</option>";
+
+      if (e.target.value === "000001") {
+        const option = document.createElement("option");
+        option.value = "102030";
+        option.textContent = "102030";
+        nfSelect.appendChild(option);
+
+        totalItens = 10;
+        itemLidoCount = 0;
+        volLidoCount = 0;
+        produtoMap = {};
+        etiquetasLidas = new Set();
+
+        document.getElementById("itemLido").value = `0/${totalItens}`;
+        document.getElementById("volLido").value = `0/${totalItens}`;
+        document.getElementById("mensagem").style.display = "none";
+
+        document.getElementById("etiqueta").disabled = false;
+        document.getElementById("produto").disabled = false;
+        document.querySelector(".confirmar").disabled = false;
+      }
+    });
+
+    document.getElementById("produto").addEventListener("input", () => {
+      document.getElementById("qtdItens").value = "1";
+      document.getElementById("qtdVols").value = "1";
+    });
+
+    document.getElementById("etiqueta").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        document.getElementById("produto").focus();
+      }
+    });
+
+    document.getElementById("produto").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        confirmar();
+      }
+    });
+
+    document.getElementById("nf").addEventListener("change", (e) => {
+      const clienteInput = document.getElementById("cliente");
+      if (e.target.value) {
+        clienteInput.value = "Mantran Tecnologias Ltda";
+      } else {
+        clienteInput.value = "";
+      }
+    });
+
+    function confirmar() {
+      const etiqueta = document.getElementById("etiqueta").value.trim();
+      const produto = document.getElementById("produto").value.trim();
+
+      if (!etiqueta || !produto) return;
+
+      if (etiquetasLidas.has(etiqueta)) {
+        alert("Esta etiqueta já foi lida! Digite uma etiqueta diferente.");
+        document.getElementById("etiqueta").value = '';
+        document.getElementById("etiqueta").focus();
+        return;
+      }
+
+      etiquetasLidas.add(etiqueta);
+
+      if (itemLidoCount < totalItens) {
+        itemLidoCount++;
+        volLidoCount++;
+        document.getElementById("itemLido").value = `${itemLidoCount}/${totalItens}`;
+        document.getElementById("volLido").value = `${volLidoCount}/${totalItens}`;
+        const codigo = produto;
+        if (codigo) {
+          produtoMap[codigo] = (produtoMap[codigo] || 0) + 1;
+        }
+        if (itemLidoCount === totalItens) {
+          document.getElementById("mensagem").style.display = "block";
+          document.getElementById("etiqueta").disabled = true;
+          document.getElementById("produto").disabled = true;
+          document.querySelector(".confirmar").disabled = true;
+        }
+      }
+      document.getElementById("etiqueta").value = '';
+      document.getElementById("produto").value = '';
+      document.getElementById("qtdItens").value = '0';
+      document.getElementById("qtdVols").value = '0';
+      document.getElementById("etiqueta").focus();
+    }
+
+    function finalizar() {
+      alert("Recebimento finalizado!");
+    }
+
+    function sair() {
+      window.location.href = "https://wms-coletor2.vercel.app/menu.html";
+    }
+
     function voltar() {
       window.history.back();
     }
 
     function irParaMenu() {
-      window.location.href = 'https://wms-coletor2.vercel.app/menu.html';
+      window.location.href = "https://wms-coletor2.vercel.app/menu.html";
     }
 
     function logout() {
       localStorage.removeItem("user");
-      window.location.href = 'https://wms-coletor2.vercel.app/index.html';
-    }
-
-    function limpar() {
-      document.getElementById("leitura").value = "";
-    }
-
-    function zerar() {
-      alert("Itens zerados!");
-    }
-
-    function finalizar() {
-      alert("Retirada finalizada!");
-    }
-
-    function sair() {
-      voltar();
-    }
-
-    // Ativa ícone vermelho se estiver na tela de menu
-    if (window.location.pathname.includes("menu.html")) {
-      const homeIcon = document.getElementById("homeIcon");
-      if (homeIcon) homeIcon.classList.add("ativo");
+      window.location.href = "https://wms-coletor2.vercel.app/index.html";
     }
   </script>
 </body>
