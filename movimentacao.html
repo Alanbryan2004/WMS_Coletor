@@ -15,7 +15,7 @@
       font-family: Arial, sans-serif;
       background: #f4f4f4;
       padding: 0.5rem;
-      padding-bottom: 70px;
+      padding-bottom: 90px; /* espaço pro rodapé maior */
       display: flex;
       justify-content: center;
     }
@@ -24,7 +24,9 @@
       width: 100%;
       max-width: 480px;
       background: white;
-      padding: 1rem 1rem 0.5rem 1rem;
+      /* padding: topo | lat | base | lat */
+      padding: 1rem 1rem 0.25rem 1rem; /* menos padding inferior */
+      margin-bottom: 20px;          /* afasta o container do rodapé */
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
@@ -52,8 +54,8 @@
     .buttons {
       display: flex;
       gap: 10px;
-      margin-top: 10px;
-      margin-bottom: 0.5rem;
+      margin-top: 8px; /* empurrei mais para cima */
+      margin-bottom: 0; 
     }
 
     .buttons button {
@@ -75,6 +77,7 @@
       color: white;
     }
 
+    /* Rodapé */
     .rodape {
       position: fixed;
       bottom: 0;
@@ -84,7 +87,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 20px;
+      padding: 15px 20px;    /* padding vertical maior */
+      min-height: 56px;      /* altura mínima igual ao menu */
       box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
       z-index: 999;
     }
@@ -97,7 +101,7 @@
     }
 
     .rodape .icones i {
-      font-size: 1.25em;
+      font-size: 1.25em; /* equivalente ao fa-lg */
       flex: 1;
       text-align: center;
       cursor: pointer;
@@ -167,17 +171,11 @@
       const produto = document.getElementById("produto").value;
       const enderecoLido = document.getElementById("enderecoAtualLido").value;
       const novoEndereco = document.getElementById("novoEndereco").value;
-
       if (!etiqueta || !produto || !enderecoLido || !novoEndereco) {
         alert("Todos os campos obrigatórios devem ser preenchidos.");
         return;
       }
-
       alert("Movimentação confirmada com sucesso!");
-    }
-
-    function sair() {
-      window.location.href = "menu.html";
     }
 
     function voltar() {
@@ -194,13 +192,11 @@
     }
 
     if (window.location.pathname.includes("menu.html")) {
-      const homeIcon = document.getElementById("homeIcon");
-      if (homeIcon) homeIcon.classList.add("ativo");
+      document.getElementById("homeIcon")?.classList.add("ativo");
     }
 
     document.getElementById("produto").addEventListener("blur", function () {
-      const produto = this.value;
-      if (produto) {
+      if (this.value) {
         document.getElementById("descricao").value = "Produto Exemplo";
         document.getElementById("cliente").value = "Cliente Exemplo";
         document.getElementById("enderecoAtualSistema").value = "A01-B02-C03";
