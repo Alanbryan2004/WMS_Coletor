@@ -33,12 +33,12 @@
       background: white;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      padding: 1.2rem; /* Aumenta o padding, mas de forma mais comedida */
+      padding: 1rem; /* Diminuí o padding para diminuir o tamanho */
       text-align: center;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      min-height: 140px; /* Ajuste da altura mínima dos cards */
-      max-height: 200px; /* Garante que o card não ultrapasse 200px de altura */
+      min-height: 120px; /* Reduzi a altura mínima */
+      max-height: 160px; /* Limitei a altura máxima para evitar rolagem */
     }
 
     .card:hover {
@@ -47,14 +47,14 @@
     }
 
     .card i {
-      font-size: 28px; /* Ajuste do tamanho do ícone */
-      margin-bottom: 10px;
+      font-size: 24px; /* Tamanho de ícone ajustado */
+      margin-bottom: 8px; /* Diminuí o espaçamento entre o ícone e o texto */
       color: #c00000; /* Cor vermelha Mantran */
     }
 
     .card span {
       display: block;
-      font-size: 14px; /* Ajuste do tamanho do texto */
+      font-size: 14px;
       color: #333;
       font-weight: bold;
     }
