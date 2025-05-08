@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Recebimento - WMS Coletor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     * { box-sizing: border-box; }
 
@@ -20,6 +21,7 @@
       justify-content: center;
       align-items: stretch;
       padding: 1rem;
+      padding-bottom: 80px; /* espaço para o rodapé fixo */
     }
 
     .container {
@@ -115,6 +117,44 @@
       border-radius: 5px;
       display: none;
     }
+
+    footer.rodape {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+    }
+
+    .rodape .icones {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rodape .icones i {
+      font-size: 22px;
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      color: #555;
+      transition: color 0.3s ease;
+    }
+
+    .rodape .icones i:hover {
+      color: #0d6efd;
+    }
+
+    .rodape .icones i.ativo {
+      color: #c00000;
+    }
   </style>
 </head>
 <body>
@@ -183,13 +223,20 @@
     </div>
   </div>
 
+  <footer class="rodape">
+    <div class="icones">
+      <i class="fas fa-arrow-left" onclick="voltar()"></i>
+      <i class="fas fa-home" id="homeIcon" onclick="irParaMenu()"></i>
+      <i class="fas fa-sign-out-alt" onclick="logout()"></i>
+    </div>
+  </footer>
+
   <script>
     let totalItens = 0;
     let itemLidoCount = 0;
     let volLidoCount = 0;
     let produtoMap = {};
     let etiquetasLidas = new Set();
-    let produtoTimer = null;
 
     document.getElementById("agendaSelect").addEventListener("change", (e) => {
       const nfSelect = document.getElementById("nf");
@@ -220,17 +267,19 @@
     document.getElementById("produto").addEventListener("input", () => {
       document.getElementById("qtdItens").value = "1";
       document.getElementById("qtdVols").value = "1";
-
-      clearTimeout(produtoTimer);
-      produtoTimer = setTimeout(() => {
-        confirmar();
-      }, 300);
     });
 
     document.getElementById("etiqueta").addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
         e.preventDefault();
         document.getElementById("produto").focus();
+      }
+    });
+
+    document.getElementById("produto").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        confirmar();
       }
     });
 
@@ -274,7 +323,6 @@
           document.querySelector(".confirmar").disabled = true;
         }
       }
-
       document.getElementById("etiqueta").value = '';
       document.getElementById("produto").value = '';
       document.getElementById("qtdItens").value = '0';
@@ -288,6 +336,19 @@
 
     function sair() {
       window.location.href = "https://wms-coletor2.vercel.app/menu.html";
+    }
+
+    function voltar() {
+      window.history.back();
+    }
+
+    function irParaMenu() {
+      window.location.href = "https://wms-coletor2.vercel.app/menu.html";
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "https://wms-coletor2.vercel.app/index.html";
     }
   </script>
 </body>
