@@ -17,6 +17,10 @@
       display: flex;
       flex-direction: column;
     }
+    .content {
+      flex-grow: 1; /* Isso faz com que o conteúdo ocupe o espaço disponível */
+      padding-bottom: 60px; /* Dando espaço para o rodapé */
+    }
     .container {
       max-width: 500px;
       background: white;
@@ -24,8 +28,6 @@
       padding: 1.5rem;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-      flex-grow: 1;
-      padding-bottom: 60px; /* Dá espaço para o rodapé */
     }
     label {
       font-weight: bold;
@@ -120,57 +122,59 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="row">
-      <div>
-        <label for="agenda">Agenda</label>
-        <select id="agenda">
-          <option value="">Selecionar</option>
-        </select>
+  <div class="content">
+    <div class="container">
+      <div class="row">
+        <div>
+          <label for="agenda">Agenda</label>
+          <select id="agenda">
+            <option value="">Selecionar</option>
+          </select>
+        </div>
+        <div>
+          <label for="ordem">Nº OS</label>
+          <input type="text" id="ordem" class="readonly" readonly />
+        </div>
       </div>
-      <div>
-        <label for="ordem">Nº OS</label>
-        <input type="text" id="ordem" class="readonly" readonly />
+
+      <label for="cliente">Cliente</label>
+      <input type="text" id="cliente" class="readonly" readonly />
+
+      <label for="etiqueta">Lê Etiqueta</label>
+      <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
+
+      <label for="produto">Lê Produto</label>
+      <input type="text" id="produto" placeholder="Digite ou escaneie" />
+
+      <label for="descricaoProduto">Descrição do Produto</label>
+      <input type="text" id="descricaoProduto" class="readonly" readonly />
+
+      <div class="row">
+        <div>
+          <label for="qtdLida">QT Item Lido</label>
+          <input type="text" id="qtdLida" class="readonly" readonly />
+        </div>
+        <div>
+          <label for="qtdAConferir">Item a Conferir</label>
+          <input type="text" id="qtdAConferir" class="readonly" readonly />
+        </div>
       </div>
-    </div>
 
-    <label for="cliente">Cliente</label>
-    <input type="text" id="cliente" class="readonly" readonly />
-
-    <label for="etiqueta">Lê Etiqueta</label>
-    <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
-
-    <label for="produto">Lê Produto</label>
-    <input type="text" id="produto" placeholder="Digite ou escaneie" />
-
-    <label for="descricaoProduto">Descrição do Produto</label>
-    <input type="text" id="descricaoProduto" class="readonly" readonly />
-
-    <div class="row">
-      <div>
-        <label for="qtdLida">QT Item Lido</label>
-        <input type="text" id="qtdLida" class="readonly" readonly />
+      <div class="row">
+        <div>
+          <label for="volLido">QT Vol Lido</label>
+          <input type="text" id="volLido" class="readonly" readonly />
+        </div>
+        <div>
+          <label for="volAConferir">Vol a Conferir</label>
+          <input type="text" id="volAConferir" class="readonly" readonly />
+        </div>
       </div>
-      <div>
-        <label for="qtdAConferir">Item a Conferir</label>
-        <input type="text" id="qtdAConferir" class="readonly" readonly />
-      </div>
-    </div>
 
-    <div class="row">
-      <div>
-        <label for="volLido">QT Vol Lido</label>
-        <input type="text" id="volLido" class="readonly" readonly />
+      <div class="buttons">
+        <button class="confirmar" onclick="confirmar()">Confirmar</button>
+        <button class="finalizar" onclick="finalizar()">Finalizar</button>
       </div>
-      <div>
-        <label for="volAConferir">Vol a Conferir</label>
-        <input type="text" id="volAConferir" class="readonly" readonly />
-      </div>
-    </div>
-
-    <div class="buttons">
-      <button class="confirmar" onclick="confirmar()">Confirmar</button>
-      <button class="finalizar" onclick="finalizar()">Finalizar</button>
     </div>
   </div>
 
