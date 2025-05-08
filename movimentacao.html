@@ -14,7 +14,8 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f4f4f4;
-      padding: 1rem 1rem 80px; /* espaço pro rodapé */
+      padding: 1rem;
+      padding-bottom: 80px; /* espaço para o rodapé */
       display: flex;
       justify-content: center;
     }
@@ -86,7 +87,6 @@
       }
     }
 
-    /* Rodapé */
     .rodape {
       position: fixed;
       bottom: 0;
@@ -109,6 +109,7 @@
     }
 
     .rodape .icones i {
+      font-size: 1.25em; /* equivalente ao fa-lg */
       flex: 1;
       text-align: center;
       cursor: pointer;
@@ -155,11 +156,12 @@
     </div>
   </div>
 
+  <!-- Rodapé -->
   <footer class="rodape">
     <div class="icones">
-      <i class="fas fa-arrow-left fa-2x" onclick="voltar()"></i>
-      <i class="fas fa-home fa-2x" id="homeIcon" onclick="irParaMenu()"></i>
-      <i class="fas fa-sign-out-alt fa-2x" onclick="logout()"></i>
+      <i class="fas fa-arrow-left fa-lg" onclick="voltar()"></i>
+      <i class="fas fa-home fa-lg" id="homeIcon" onclick="irParaMenu()"></i>
+      <i class="fas fa-sign-out-alt fa-lg" onclick="logout()"></i>
     </div>
   </footer>
 
@@ -197,15 +199,19 @@
     }
 
     function irParaMenu() {
-      window.location.href = "menu.html";
+      window.location.href = 'menu.html';
     }
 
     function logout() {
       localStorage.removeItem("user");
-      window.location.href = "index.html";
+      window.location.href = 'index.html';
     }
 
-    // Simula preenchimento automático
+    if (window.location.pathname.includes("menu.html")) {
+      const homeIcon = document.getElementById("homeIcon");
+      if (homeIcon) homeIcon.classList.add("ativo");
+    }
+
     document.getElementById("produto").addEventListener("blur", function () {
       const produto = this.value;
       if (produto) {
@@ -214,12 +220,6 @@
         document.getElementById("enderecoAtualSistema").value = "A01-B02-C03";
       }
     });
-
-    // Ativa ícone vermelho se estiver no menu
-    if (window.location.pathname.includes("menu.html")) {
-      const homeIcon = document.getElementById("homeIcon");
-      if (homeIcon) homeIcon.classList.add("ativo");
-    }
   </script>
 </body>
 </html>
