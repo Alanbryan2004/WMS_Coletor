@@ -34,7 +34,7 @@
       min-height: calc(100vh - 120px); /* Espaço para o rodapé fixo */
       display: flex;
       flex-direction: column;
-      justify-content: flex-end; /* Faz os botões ficarem próximos ao rodapé */
+      justify-content: flex-end;
     }
 
     label {
@@ -91,7 +91,7 @@
 
     .buttons button {
       flex: 1;
-      padding: 8px; /* Ajuste para otimizar o espaço */
+      padding: 8px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -225,13 +225,31 @@
   <footer class="rodape">
     <div class="icones">
       <i class="fas fa-arrow-left" onclick="voltar()"></i>
-      <i class="fas fa-home" id="homeIcon" onclick="irParaMenu()"></i>
+      <i class="fas fa-home" onclick="irParaMenu()"></i>
       <i class="fas fa-sign-out-alt" onclick="logout()"></i>
     </div>
   </footer>
 
   <script>
-    // Seu código JavaScript permanece igual
+    function voltar() {
+      window.history.back();
+    }
+
+    function irParaMenu() {
+      window.location.href = 'menu.html';
+    }
+
+    function logout() {
+      window.location.href = 'index.html';
+    }
+
+    function confirmar() {
+      alert("Função Confirmar executada.");
+    }
+
+    function finalizar() {
+      document.getElementById("mensagem").style.display = "block";
+    }
   </script>
 </body>
 </html>
