@@ -4,246 +4,290 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Recebimento - WMS Coletor</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    body {
+    * { box-sizing: border-box; }
+
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: Arial, sans-serif;
       background: #f4f4f4;
-      padding-bottom: 80px; /* espaço para o rodapé */
     }
 
-    header {
-      background-color: #c00000;
-      color: white;
-      padding: 10px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 1rem;
     }
 
     .container {
-      padding: 15px;
-    }
-
-    .input-group {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      margin-bottom: 10px;
+      justify-content: space-between;
     }
 
-    .input-group label {
+    label {
       font-weight: bold;
-      margin-bottom: 4px;
+      display: block;
+      margin-top: 10px;
     }
 
-    .input-group input,
-    .input-group select {
-      padding: 8px;
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border-radius: 5px;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
+      font-size: 1rem;
     }
 
     .grid {
-      margin-top: 20px;
-      background: #fff;
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
     }
 
-    .grid table {
-      width: 100%;
-      border-collapse: collapse;
+    .readonly {
+      background-color: #e9ecef;
     }
 
-    .grid th, .grid td {
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-      text-align: left;
-      font-size: 14px;
-    }
-
-    .grid th {
-      background: #c00000;
-      color: white;
-    }
-
-    .botoes {
-      margin-top: 20px;
+    .inline-group {
       display: flex;
       gap: 10px;
-      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 5px;
     }
 
-    .botoes button {
+    .inline-group > label {
+      margin: 0;
+    }
+
+    .inline-fields {
+      display: flex;
+      gap: 10px;
+    }
+
+    .inline-fields .field {
       flex: 1;
-      padding: 12px;
-      background-color: #c00000;
-      color: white;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      flex: 1;
+      padding: 10px;
       border: none;
-      border-radius: 6px;
-      font-size: 16px;
+      border-radius: 5px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      font-weight: bold;
+      font-size: 1rem;
+      margin-right: 10px;
     }
 
-    .botoes button:hover {
-      background-color: #a00000;
+    .buttons button:last-child {
+      margin-right: 0;
     }
 
-    footer.rodape {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background-color: #ffffff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
-      z-index: 999;
-    }
+    .confirmar { background-color: #0d6efd; color: white; }
+    .finalizar { background-color: #e2e6ea; color: black; }
+    .sair { background-color: transparent; color: black; border: 1px solid #ccc; }
 
-    .rodape .icones {
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .rodape .icones i {
-      font-size: 22px;
-      flex: 1;
-      text-align: center;
-      cursor: pointer;
-      color: #555;
-      transition: color 0.3s ease;
-    }
-
-    .rodape .icones i:hover {
-      color: #0d6efd;
-    }
-
-    .rodape .icones i.ativo {
-      color: #c00000;
+    .mensagem-final {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 5px;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <header>Recebimento</header>
-
   <div class="container">
-    <div class="input-group">
-      <label for="agenda">Agenda</label>
-      <select id="agenda">
-        <option value="">Selecione uma agenda</option>
-        <option value="agenda1">Agenda 1</option>
-        <option value="agenda2">Agenda 2</option>
-      </select>
+    <div>
+      <div class="inline-fields">
+        <div class="field">
+          <label for="agenda">Agenda</label>
+          <select id="agendaSelect">
+            <option value="">Selecionar</option>
+            <option value="000001">000001</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="nf">Nº NF</label>
+          <select id="nf">
+            <option value="">Selecionar</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="etiqueta">Lê Etiqueta</label>
+      <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
+
+      <div class="inline-group">
+        <label for="produto" style="flex: 2;">Lê Produto</label>
+        <label style="flex: 1; display: flex; align-items: center; white-space: nowrap;">
+          <input type="checkbox" id="volume" style="margin-right: 5px;" /> Volume Paletizado
+        </label>
+      </div>
+      <input type="text" id="produto" placeholder="Digite ou escaneie" />
+
+      <div class="grid">
+        <div>
+          <label>Qtde Itens</label>
+          <input type="text" id="qtdItens" value="0" readonly />
+        </div>
+        <div>
+          <label>Item Lido / Conferir</label>
+          <input type="text" id="itemLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+        </div>
+        <div>
+          <label>Qtde Vols</label>
+          <input type="text" id="qtdVols" value="0" readonly />
+        </div>
+        <div>
+          <label>Vol Lido / Conferir</label>
+          <input type="text" id="volLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+        </div>
+      </div>
+
+      <label for="cliente">Cliente</label>
+      <input type="text" readonly class="readonly" id="cliente" />
+
+      <div id="itensRecebimento"></div>
+
+      <div class="mensagem-final" id="mensagem">
+        Conferência Finalizada com Sucesso!
+      </div>
     </div>
 
-    <div class="input-group">
-      <label for="romaneio">Romaneio</label>
-      <input type="text" id="romaneio" placeholder="Digite ou leia o romaneio" />
-    </div>
-
-    <div class="input-group">
-      <label for="produto">Lê Produto</label>
-      <input type="text" id="produto" placeholder="Leia o código de barras" />
-    </div>
-
-    <div class="grid">
-      <table>
-        <thead>
-          <tr>
-            <th>Produto</th>
-            <th>Descrição</th>
-            <th>Qtd</th>
-          </tr>
-        </thead>
-        <tbody id="tabela-produtos">
-          <!-- Linhas inseridas dinamicamente -->
-        </tbody>
-      </table>
-    </div>
-
-    <div class="botoes">
-      <button onclick="confirmar()">Confirmar</button>
-      <button onclick="finalizar()">Finalizar</button>
-      <button onclick="zerar()">Zerar</button>
-      <button onclick="limpar()">Limpar</button>
+    <div class="buttons">
+      <button class="confirmar" onclick="confirmar()">Confirmar</button>
+      <button class="finalizar" onclick="finalizar()">Finalizar</button>
+      <button class="sair" onclick="sair()">Sair</button>
     </div>
   </div>
 
-  <footer class="rodape">
-    <div class="icones">
-      <i class="fas fa-arrow-left" onclick="voltar()"></i>
-      <i class="fas fa-home" id="homeIcon" onclick="irParaMenu()"></i>
-      <i class="fas fa-sign-out-alt" onclick="logout()"></i>
-    </div>
-  </footer>
-
   <script>
-    function voltar() {
-      window.history.back();
-    }
+    let totalItens = 0;
+    let itemLidoCount = 0;
+    let volLidoCount = 0;
+    let produtoMap = {};
+    let etiquetasLidas = new Set();
+    let produtoTimer = null;
 
-    function irParaMenu() {
-      window.location.href = 'https://wms-coletor2.vercel.app/menu.html';
-    }
+    document.getElementById("agendaSelect").addEventListener("change", (e) => {
+      const nfSelect = document.getElementById("nf");
+      nfSelect.innerHTML = "<option value=''>Selecionar</option>";
 
-    function logout() {
-      localStorage.removeItem("user");
-      window.location.href = 'https://wms-coletor2.vercel.app/index.html';
-    }
+      if (e.target.value === "000001") {
+        const option = document.createElement("option");
+        option.value = "102030";
+        option.textContent = "102030";
+        nfSelect.appendChild(option);
 
-    if (window.location.pathname.includes("recebimento.html")) {
-      document.getElementById("homeIcon").classList.add("ativo");
-    }
+        totalItens = 10;
+        itemLidoCount = 0;
+        volLidoCount = 0;
+        produtoMap = {};
+        etiquetasLidas = new Set();
 
-    function confirmar() {
-      alert('Produto confirmado!');
-    }
+        document.getElementById("itemLido").value = `0/${totalItens}`;
+        document.getElementById("volLido").value = `0/${totalItens}`;
+        document.getElementById("mensagem").style.display = "none";
 
-    function finalizar() {
-      alert('Recebimento finalizado!');
-    }
-
-    function zerar() {
-      document.getElementById("produto").value = '';
-    }
-
-    function limpar() {
-      document.getElementById("romaneio").value = '';
-      document.getElementById("produto").value = '';
-      document.getElementById("tabela-produtos").innerHTML = '';
-    }
-
-    // Simulando leitura de código de barras
-    document.getElementById("produto").addEventListener("input", function (e) {
-      const codigo = e.target.value.trim();
-      if (codigo.length >= 8) { // Simulando leitura
-        adicionarProduto(codigo);
-        e.target.value = "";
+        document.getElementById("etiqueta").disabled = false;
+        document.getElementById("produto").disabled = false;
+        document.querySelector(".confirmar").disabled = false;
       }
     });
 
-    function adicionarProduto(codigo) {
-      const tabela = document.getElementById("tabela-produtos");
-      let linhaExistente = Array.from(tabela.rows).find(row => row.cells[0].innerText === codigo);
+    document.getElementById("produto").addEventListener("input", () => {
+      document.getElementById("qtdItens").value = "1";
+      document.getElementById("qtdVols").value = "1";
 
-      if (linhaExistente) {
-        let qtdCell = linhaExistente.cells[2];
-        qtdCell.innerText = parseInt(qtdCell.innerText) + 1;
-      } else {
-        let novaLinha = tabela.insertRow();
-        novaLinha.insertCell(0).innerText = codigo;
-        novaLinha.insertCell(1).innerText = "Descrição do produto";
-        novaLinha.insertCell(2).innerText = 1;
+      clearTimeout(produtoTimer);
+      produtoTimer = setTimeout(() => {
+        confirmar();
+      }, 300);
+    });
+
+    document.getElementById("etiqueta").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        document.getElementById("produto").focus();
       }
+    });
+
+    document.getElementById("nf").addEventListener("change", (e) => {
+      const clienteInput = document.getElementById("cliente");
+      if (e.target.value) {
+        clienteInput.value = "Mantran Tecnologias Ltda";
+      } else {
+        clienteInput.value = "";
+      }
+    });
+
+    function confirmar() {
+      const etiqueta = document.getElementById("etiqueta").value.trim();
+      const produto = document.getElementById("produto").value.trim();
+
+      if (!etiqueta || !produto) return;
+
+      if (etiquetasLidas.has(etiqueta)) {
+        alert("Esta etiqueta já foi lida! Digite uma etiqueta diferente.");
+        document.getElementById("etiqueta").value = '';
+        document.getElementById("etiqueta").focus();
+        return;
+      }
+
+      etiquetasLidas.add(etiqueta);
+
+      if (itemLidoCount < totalItens) {
+        itemLidoCount++;
+        volLidoCount++;
+        document.getElementById("itemLido").value = `${itemLidoCount}/${totalItens}`;
+        document.getElementById("volLido").value = `${volLidoCount}/${totalItens}`;
+        const codigo = produto;
+        if (codigo) {
+          produtoMap[codigo] = (produtoMap[codigo] || 0) + 1;
+        }
+        if (itemLidoCount === totalItens) {
+          document.getElementById("mensagem").style.display = "block";
+          document.getElementById("etiqueta").disabled = true;
+          document.getElementById("produto").disabled = true;
+          document.querySelector(".confirmar").disabled = true;
+        }
+      }
+
+      document.getElementById("etiqueta").value = '';
+      document.getElementById("produto").value = '';
+      document.getElementById("qtdItens").value = '0';
+      document.getElementById("qtdVols").value = '0';
+      document.getElementById("etiqueta").focus();
+    }
+
+    function finalizar() {
+      alert("Recebimento finalizado!");
+    }
+
+    function sair() {
+      window.location.href = "https://wms-coletor2.vercel.app/menu.html";
     }
   </script>
 </body>
