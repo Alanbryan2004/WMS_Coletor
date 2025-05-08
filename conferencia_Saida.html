@@ -4,36 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Conferência Saída - WMS Coletor</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    body {
+ <style>
+    * { box-sizing: border-box; }
+
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100%;
       font-family: Arial, sans-serif;
       background: #f4f4f4;
-      padding: 0;
-      min-height: 100vh;
+    }
+
+    body {
       display: flex;
-      flex-direction: column;
+      justify-content: center;
+      align-items: stretch;
+      padding: 1rem;
+      padding-bottom: 120px; /* Espaço para o rodapé fixo */
     }
-    .content {
-      flex-grow: 1; /* Isso faz com que o conteúdo ocupe o espaço disponível */
-      padding-bottom: 60px; /* Dando espaço para o rodapé */
-    }
+
     .container {
+      width: 100%;
       max-width: 500px;
       background: white;
-      margin: auto;
       padding: 1.5rem;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      min-height: calc(100vh - 120px); /* Espaço para o rodapé */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
+
     label {
       font-weight: bold;
       display: block;
       margin-top: 10px;
     }
+
     input, select {
       width: 100%;
       padding: 10px;
@@ -43,47 +51,35 @@
       border: 1px solid #ccc;
       font-size: 1rem;
     }
+
     .readonly {
       background-color: #e9ecef;
     }
-    .row {
-      display: flex;
-      gap: 10px;
-    }
-    .row > div {
-      flex: 1 1 48%;
-    }
+
     .buttons {
       display: flex;
+      justify-content: space-between;
       gap: 10px;
       margin-top: 20px;
-      justify-content: space-between;
     }
+
     .buttons button {
-      flex: 1 1 30%;
-      padding: 12px;
-      font-size: 1rem;
+      flex: 1;
+      padding: 10px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
     }
-    .confirmar {
-      background-color: #0d6efd;
-      color: white;
-    }
-    .finalizar {
-      background-color: #e2e6ea;
-      color: black;
-    }
-    .sair {
-      background-color: transparent;
-      color: black;
-      border: 1px solid #ccc;
-    }
+
+    .confirmar { background-color: #0d6efd; color: white; }
+    .finalizar { background-color: #e2e6ea; color: black; }
+    .sair { background-color: transparent; color: black; border: 1px solid #ccc; }
 
     footer.rodape {
       position: fixed;
-      bottom: 10px; /* Ajustado para ficar mais alto */
+      bottom: 0;
       left: 0;
       right: 0;
       background-color: #ffffff;
@@ -93,7 +89,6 @@
       padding: 10px 20px;
       box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
       z-index: 999;
-      font-size: 18px;
     }
 
     .rodape .icones {
@@ -118,6 +113,12 @@
 
     .rodape .icones i.ativo {
       color: #c00000;
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 1rem;
+      }
     }
   </style>
 </head>
