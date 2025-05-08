@@ -11,24 +11,20 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f4f4f4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
+      padding: 2rem 1rem 5rem; /* padding inferior maior por causa do rodapé fixo */
     }
 
     img.logo {
+      display: block;
       max-width: 200px;
-      margin-bottom: 20px;
+      margin: 0 auto 20px;
     }
 
     .menu-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 16px;
       width: 100%;
-      max-width: 600px;
     }
 
     .card {
@@ -58,22 +54,22 @@
       color: #333;
       font-weight: bold;
     }
-	
-	.rodape {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: #ffffff;
-  border-top: 1px solid #ddd;
-  color: #555;
-  font-size: 12px;
-  padding: 10px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 999;
-  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
-}
+
+    .rodape {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #ffffff;
+      border-top: 1px solid #ddd;
+      color: #555;
+      font-size: 12px;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 999;
+      box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
 <body>
@@ -124,9 +120,10 @@
       window.location.href = "https://wms-coletor2.vercel.app/index.html";
     }
   </script>
+
   <footer class="rodape">
-  <span>© 2025 Mantran Tecnologias</span>
-  <span>Versão 1.0 </span>
-</footer>
+    <span>© 2025 Mantran Tecnologias</span>
+    <span>Versão 1.0</span>
+  </footer>
 </body>
 </html>
