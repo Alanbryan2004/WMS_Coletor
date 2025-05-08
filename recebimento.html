@@ -14,25 +14,27 @@
       height: 100%;
       font-family: Arial, sans-serif;
       background: #f4f4f4;
-      display: flex;
-      flex-direction: column;
     }
 
     body {
-      padding: 1rem;
       display: flex;
-      flex-direction: column;
-      justify-content: space-between; /* Adiciona esse para distribuir o espaço entre conteúdo e rodapé */
+      justify-content: center;
+      align-items: stretch;
+      padding: 1rem;
     }
 
     .container {
-      flex: 1; /* Ocupa o espaço restante, ajustando conforme necessário */
+      width: 100%;
       max-width: 500px;
       background: white;
       padding: 1.5rem;
+      padding-bottom: 80px; /* Espaço interno para não colidir com o rodapé */
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-      margin-bottom: 120px; /* Mantém o espaço para o rodapé */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     label {
@@ -121,6 +123,7 @@
       bottom: 0;
       left: 0;
       right: 0;
+      height: 80px;
       background-color: #ffffff;
       display: flex;
       justify-content: space-between;
@@ -229,7 +232,124 @@
   </footer>
 
   <script>
-    // Seu código JavaScript permanece igual
+    let totalItens = 0;
+    let itemLidoCount = 0;
+    let volLidoCount = 0;
+    let produtoMap = {};
+    let etiquetasLidas = new Set();
+
+    document.getElementById("agendaSelect").addEventListener("change", (e) => {
+      const nfSelect = document.getElementById("nf");
+      nfSelect.innerHTML = "<option value=''>Selecionar</option>";
+
+      if (e.target.value === "000001") {
+        const option = document.createElement("option");
+        option.value = "102030";
+        option.textContent = "102030";
+        nfSelect.appendChild(option);
+
+        totalItens = 10;
+        itemLidoCount = 0;
+        volLidoCount = 0;
+        produtoMap = {};
+        etiquetasLidas = new Set();
+
+        document.getElementById("itemLido").value = `0/${totalItens}`;
+        document.getElementById("volLido").value = `0/${totalItens}`;
+        document.getElementById("mensagem").style.display = "none";
+
+        document.getElementById("etiqueta").disabled = false;
+        document.getElementById("produto").disabled = false;
+        document.querySelector(".confirmar").disabled = false;
+      }
+    });
+
+    document.getElementById("produto").addEventListener("input", () => {
+      document.getElementById("qtdItens").value = "1";
+      document.getElementById("qtdVols").value = "1";
+    });
+
+    document.getElementById("etiqueta").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        document.getElementById("produto").focus();
+      }
+    });
+
+    document.getElementById("produto").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        confirmar();
+      }
+    });
+
+    document.getElementById("nf").addEventListener("change", (e) => {
+      const clienteInput = document.getElementById("cliente");
+      if (e.target.value) {
+        clienteInput.value = "Mantran Tecnologias Ltda";
+      } else {
+        clienteInput.value = "";
+      }
+    });
+
+    function confirmar() {
+      const etiqueta = document.getElementById("etiqueta").value.trim();
+      const produto = document.getElementById("produto").value.trim();
+
+      if (!etiqueta || !produto) return;
+
+      if (etiquetasLidas.has(etiqueta)) {
+        alert("Esta etiqueta já foi lida! Digite uma etiqueta diferente.");
+        document.getElementById("etiqueta").value = '';
+        document.getElementById("etiqueta").focus();
+        return;
+      }
+
+      etiquetasLidas.add(etiqueta);
+
+      if (itemLidoCount < totalItens) {
+        itemLidoCount++;
+        volLidoCount++;
+        document.getElementById("itemLido").value = `${itemLidoCount}/${totalItens}`;
+        document.getElementById("volLido").value = `${volLidoCount}/${totalItens}`;
+        const codigo = produto;
+        if (codigo) {
+          produtoMap[codigo] = (produtoMap[codigo] || 0) + 1;
+        }
+        if (itemLidoCount === totalItens) {
+          document.getElementById("mensagem").style.display = "block";
+          document.getElementById("etiqueta").disabled = true;
+          document.getElementById("produto").disabled = true;
+          document.querySelector(".confirmar").disabled = true;
+        }
+      }
+      document.getElementById("etiqueta").value = '';
+      document.getElementById("produto").value = '';
+      document.getElementById("qtdItens").value = '0';
+      document.getElementById("qtdVols").value = '0';
+      document.getElementById("etiqueta").focus();
+    }
+
+    function finalizar() {
+      alert("Recebimento finalizado!");
+    }
+
+    function sair() {
+      window.location.href = "https://wms-coletor2.vercel.app/menu.html";
+    }
+
+    function voltar() {
+      window.history.back();
+    }
+
+    function irParaMenu() {
+      window.location.href = "https://wms-coletor2.vercel.app/menu.html";
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "https://wms-coletor2.vercel.app/index.html";
+    }
   </script>
 </body>
 </html>
