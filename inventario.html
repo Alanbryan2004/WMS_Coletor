@@ -70,15 +70,18 @@
       justify-content: space-between;
       gap: 10px;
       margin-top: 20px;
+      flex-wrap: nowrap;
     }
 
     .buttons button {
-      flex: 1;
+      flex: 1 1 0;
+      min-width: 0;
       padding: 12px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       font-size: 14px;
+      white-space: nowrap;
     }
 
     .limpar {
@@ -96,7 +99,7 @@
       color: black;
     }
 
-    @media (max-width: 400px) {
+    @media (max-width: 360px) {
       .buttons {
         flex-direction: column;
       }
