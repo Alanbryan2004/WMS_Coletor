@@ -210,7 +210,6 @@
   let totalLido = 0;
   let totalSeparado = 0;
 
-  // Dados simulados da agenda 000010
   const dadosAgenda = {
     "000010": {
       ordem: "000034",
@@ -229,11 +228,7 @@
     const option = document.createElement("option");
     option.value = "000010";
     option.textContent = "000010";
-    option.selected = true; // já aparece selecionado
     agendaSelect.appendChild(option);
-
-    // Dispara evento de mudança para preencher os dados
-    preencherDadosAgenda("000010");
   }
 
   function preencherDadosAgenda(valor) {
@@ -245,26 +240,36 @@
       document.getElementById("qtdSeparada").value = dados.qtdSeparada;
       document.getElementById("qtdASeparar").value = dados.qtdASeparar;
       document.getElementById("qtdLida").value = dados.qtdLida;
+
+      totalLido = dados.qtdLida;
+      totalSeparado = dados.qtdSeparada;
+    } else {
+      // Limpa campos caso a opção seja inválida
+      document.getElementById("ordem").value = "";
+      document.getElementById("sugerido").value = "";
+      document.getElementById("etiquetaSugerida").value = "";
+      document.getElementById("qtdSeparada").value = "";
+      document.getElementById("qtdASeparar").value = "";
+      document.getElementById("qtdLida").value = "";
     }
   }
 
-  // Evento de alteração da agenda
   document.addEventListener("DOMContentLoaded", () => {
     carregarAgenda();
+
     document.getElementById("agenda").addEventListener("change", (e) => {
       preencherDadosAgenda(e.target.value);
     });
 
-    // Ao digitar no campo de produto
     const produtoInput = document.getElementById("produto");
     produtoInput.addEventListener("input", () => {
-      if (produtoInput.value.length >= 4) { // ajusta conforme o tamanho da leitura
+      if (produtoInput.value.length >= 4) {
         document.getElementById("qtd").value = 1;
         totalLido += 1;
         totalSeparado += 1;
         document.getElementById("qtdLida").value = totalLido;
         document.getElementById("qtdSeparada").value = totalSeparado;
-        produtoInput.value = ""; // limpa o campo após leitura
+        produtoInput.value = "";
       }
     });
   });
@@ -299,6 +304,7 @@
     window.location.href = "index.html";
   }
 </script>
+
 
 </body>
 </html>
