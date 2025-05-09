@@ -6,143 +6,28 @@
   <title>Separação - WMS Coletor</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-    }
-
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
-      padding: 1rem;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 500px;
-      background: white;
-      padding: 1.5rem;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-      max-height: calc(100vh - 80px);
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 10px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-
-    .readonly {
-      background-color: #e9ecef;
-    }
-
-    .row {
-      display: flex;
-      gap: 10px;
-    }
-
-    .row > div {
-      flex: 1;
-    }
-
-    .buttons {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .buttons button {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 1rem;
-    }
-
-    .confirmar { background-color: #0d6efd; color: white; }
-    .finalizar { background-color: #e2e6ea; color: black; }
-
+    /* ... seu CSS existente ... */
     .toast {
       position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #28a745;
+      top: 10px;
+      right: 10px;
+      background: #28a745;
       color: white;
       padding: 10px 20px;
       border-radius: 5px;
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      font-weight: bold;
-      z-index: 1000;
-      display: none;
+      z-index: 9999;
+      animation: fadeOut 3s forwards;
     }
 
-    footer.rodape {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background-color: #ffffff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
-      z-index: 999;
-    }
-
-    .rodape .icones {
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .rodape .icones i {
-      font-size: 22px;
-      flex: 1;
-      text-align: center;
-      cursor: pointer;
-      color: #555;
-      transition: color 0.3s ease;
-    }
-
-    .rodape .icones i:hover {
-      color: #0d6efd;
-    }
-
-    .rodape .icones i.ativo {
-      color: #c00000;
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { opacity: 0; display: none; }
     }
   </style>
 </head>
 <body>
-  <div class="toast" id="toast">Produto incluído com sucesso!</div>
-
   <div class="container">
     <div>
       <div class="row">
@@ -172,7 +57,7 @@
         </div>
         <div>
           <label for="etiquetaSugerida">Etiqueta Sugerida</label>
-          <input type="text" id="etiquetaSugerida" class="readonly" readonly>
+          <input type="text" id="etiquetaSugerida" class="readonly" readonly tabindex="-1">
         </div>
       </div>
 
@@ -217,69 +102,71 @@
   </footer>
 
   <script>
-    document.getElementById('agenda').addEventListener('change', function () {
-      if (this.value === "000010") {
-        document.getElementById('ordem').value = "000034";
-        document.getElementById('sugerido').value = "D01 C048 R91 P5 N0 A";
-        document.getElementById('etiquetaSugerida').value = "127";
-        document.getElementById('qtdSeparada').value = "0";
-        document.getElementById('qtdASeparar').value = "7";
-        document.getElementById('qtdLida').value = "0";
-        setTimeout(() => document.getElementById('endereco').focus(), 100);
+    const agenda = document.getElementById("agenda");
+    const ordem = document.getElementById("ordem");
+    const sugerido = document.getElementById("sugerido");
+    const etiquetaSugerida = document.getElementById("etiquetaSugerida");
+    const qtdSeparada = document.getElementById("qtdSeparada");
+    const qtdLida = document.getElementById("qtdLida");
+    const qtdASeparar = document.getElementById("qtdASeparar");
+    const endereco = document.getElementById("endereco");
+    const etiqueta = document.getElementById("etiqueta");
+    const produto = document.getElementById("produto");
+    const quantidade = document.getElementById("quantidade");
+
+    agenda.addEventListener("change", () => {
+      if (agenda.value === "000010") {
+        ordem.value = "000034";
+        sugerido.value = "D01 C048 R91 P5 N0 A";
+        etiquetaSugerida.value = "127";
+        qtdSeparada.value = "0";
+        qtdLida.value = "0";
+        qtdASeparar.value = "7";
+        endereco.focus();
       }
     });
 
-    // Pular foco somente no Enter
-    document.getElementById('endereco').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        document.getElementById('etiqueta').focus();
-      }
+    endereco.addEventListener("keydown", e => {
+      if (e.key === "Enter") etiqueta.focus();
     });
 
-    // Ao ler etiqueta, vai direto para produto
-    document.getElementById('etiqueta').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        document.getElementById('produto').focus();
-      }
+    etiqueta.addEventListener("keydown", e => {
+      if (e.key === "Enter") produto.focus();
     });
 
-    // Ao ler produto, inclui o item
-    document.getElementById('produto').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
+    produto.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        quantidade.value = "1";
         incluirProduto();
       }
     });
 
     function incluirProduto() {
-      const quantidadeInput = document.getElementById('quantidade');
-      quantidadeInput.value = "1";
+      let qtd = parseInt(quantidade.value) || 0;
+      let lida = parseInt(qtdLida.value) || 0;
+      let separada = parseInt(qtdSeparada.value) || 0;
 
-      let qtdLida = parseInt(document.getElementById('qtdLida').value || "0");
-      let qtdSeparada = parseInt(document.getElementById('qtdSeparada').value || "0");
-      const qtdNova = parseInt(quantidadeInput.value || "0");
+      qtdLida.value = lida + qtd;
+      qtdSeparada.value = separada + qtd;
 
-      document.getElementById('qtdLida').value = qtdLida + qtdNova;
-      document.getElementById('qtdSeparada').value = qtdSeparada + qtdNova;
+      showToast("Produto incluído!");
+      limparCampos();
+      endereco.focus();
+    }
 
-      // Limpa campos de leitura
-      document.getElementById('endereco').value = "";
-      document.getElementById('etiqueta').value = "";
-      document.getElementById('produto').value = "";
-      quantidadeInput.value = "";
-
-      showToast("Produto incluído com sucesso!");
-
-      setTimeout(() => document.getElementById('endereco').focus(), 100);
+    function limparCampos() {
+      endereco.value = "";
+      etiqueta.value = "";
+      produto.value = "";
+      quantidade.value = "";
     }
 
     function showToast(msg) {
-      const toast = document.getElementById('toast');
+      const toast = document.createElement("div");
+      toast.className = "toast";
       toast.textContent = msg;
-      toast.style.display = 'block';
-      setTimeout(() => toast.style.display = 'none', 2000);
+      document.body.appendChild(toast);
+      setTimeout(() => document.body.removeChild(toast), 3000);
     }
 
     function confirmar() {
