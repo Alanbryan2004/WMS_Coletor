@@ -290,6 +290,9 @@
       const novaQtdASeparar = qtdASeparar - quantidade;
       document.getElementById("qtdASeparar").value = novaQtdASeparar;
 
+      // Atualiza o campo Quantidade
+      document.getElementById("quantidade").value = "";
+
       // Se a quantidade a separar for 0 ou menor, notifica o usuário
       if (novaQtdASeparar <= 0) {
         exibirMensagem("Quantidade a separar finalizada!");
