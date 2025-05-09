@@ -191,8 +191,8 @@
 
       <div class="row">
         <div>
-          <label for="qtd">Quantidade</label>
-          <input type="text" id="qtd" placeholder="Digite ou escaneie">
+          <label for="quantidade">Quantidade</label>
+          <input type="text" id="quantidade" placeholder="Digite ou escaneie">
         </div>
         <div>
           <label for="qtdLida">Qtd. Lida</label>
@@ -271,23 +271,23 @@
       const qtdLida = parseInt(document.getElementById("qtdLida").value) || 0;
       const qtdSeparada = parseInt(document.getElementById("qtdSeparada").value) || 0;
       const qtdASeparar = parseInt(document.getElementById("qtdASeparar").value) || 0;
-      const qtd = parseInt(document.getElementById("qtd").value);
+      const quantidade = parseInt(document.getElementById("quantidade").value);
 
-      if (isNaN(qtd) || qtd <= 0) {
+      if (isNaN(quantidade) || quantidade <= 0) {
         exibirMensagem("Por favor, insira uma quantidade válida.");
         return;
       }
 
       // Atualiza Qtd Lida
-      const novaQtdLida = qtdLida + qtd;
+      const novaQtdLida = qtdLida + quantidade;
       document.getElementById("qtdLida").value = novaQtdLida;
 
       // Soma a quantidade lida à quantidade separada
-      const novaQtdSeparada = qtdSeparada + qtd;
+      const novaQtdSeparada = qtdSeparada + quantidade;
       document.getElementById("qtdSeparada").value = novaQtdSeparada;
 
       // Atualiza a quantidade a separar
-      const novaQtdASeparar = qtdASeparar - qtd;
+      const novaQtdASeparar = qtdASeparar - quantidade;
       document.getElementById("qtdASeparar").value = novaQtdASeparar;
 
       // Se a quantidade a separar for 0 ou menor, notifica o usuário
@@ -329,7 +329,7 @@
       document.getElementById("endereco").value = "";
       document.getElementById("etiqueta").value = "";
       document.getElementById("produto").value = "";
-      document.getElementById("qtd").value = "";
+      document.getElementById("quantidade").value = "";
     }
 
     function autoPularLeitura() {
