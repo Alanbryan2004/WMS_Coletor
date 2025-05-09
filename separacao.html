@@ -204,53 +204,101 @@
     </div>
   </footer>
 
-  <script>
-    function carregarAgenda() {
-      const agendaSelect = document.getElementById("agenda");
-      fetch('/api/agenda')
-        .then(response => response.json())
-        .then(data => {
-          data.agendas.forEach(agenda => {
-            const option = document.createElement("option");
-            option.value = agenda.id;
-            option.textContent = agenda.numero;
-            agendaSelect.appendChild(option);
-          });
-        })
-        .catch(error => console.error("Erro ao carregar agendas:", error));
+  <!-- (Mantém o seu HTML e CSS como está acima) -->
+
+<script>
+  let totalLido = 0;
+  let totalSeparado = 0;
+
+  // Dados simulados da agenda 000010
+  const dadosAgenda = {
+    "000010": {
+      ordem: "000034",
+      sugerido: "D01 C048 R91 P5 N0 A",
+      etiquetaSugerida: "127",
+      qtdSeparada: 0,
+      qtdASeparar: 7,
+      qtdLida: 0
     }
+  };
 
-    window.onload = carregarAgenda;
+  function carregarAgenda() {
+    const agendaSelect = document.getElementById("agenda");
 
-    function confirmar() {
-      const qtdLida = document.getElementById("qtdLida").value;
-      const qtdSeparada = document.getElementById("qtdSeparada").value;
-      const qtdASeparar = document.getElementById("qtdASeparar").value;
+    // Adiciona manualmente a opção de exemplo
+    const option = document.createElement("option");
+    option.value = "000010";
+    option.textContent = "000010";
+    option.selected = true; // já aparece selecionado
+    agendaSelect.appendChild(option);
 
-      if (parseInt(qtdLida) < parseInt(qtdSeparada)) {
-        alert("Quantidade lida não corresponde à separação!");
-      } else if (parseInt(qtdSeparada) < parseInt(qtdASeparar)) {
-        alert("Quantidade separada é maior que a quantidade a separar!");
-      } else {
-        alert("Produto separado com sucesso!");
+    // Dispara evento de mudança para preencher os dados
+    preencherDadosAgenda("000010");
+  }
+
+  function preencherDadosAgenda(valor) {
+    if (dadosAgenda[valor]) {
+      const dados = dadosAgenda[valor];
+      document.getElementById("ordem").value = dados.ordem;
+      document.getElementById("sugerido").value = dados.sugerido;
+      document.getElementById("etiquetaSugerida").value = dados.etiquetaSugerida;
+      document.getElementById("qtdSeparada").value = dados.qtdSeparada;
+      document.getElementById("qtdASeparar").value = dados.qtdASeparar;
+      document.getElementById("qtdLida").value = dados.qtdLida;
+    }
+  }
+
+  // Evento de alteração da agenda
+  document.addEventListener("DOMContentLoaded", () => {
+    carregarAgenda();
+    document.getElementById("agenda").addEventListener("change", (e) => {
+      preencherDadosAgenda(e.target.value);
+    });
+
+    // Ao digitar no campo de produto
+    const produtoInput = document.getElementById("produto");
+    produtoInput.addEventListener("input", () => {
+      if (produtoInput.value.length >= 4) { // ajusta conforme o tamanho da leitura
+        document.getElementById("qtd").value = 1;
+        totalLido += 1;
+        totalSeparado += 1;
+        document.getElementById("qtdLida").value = totalLido;
+        document.getElementById("qtdSeparada").value = totalSeparado;
+        produtoInput.value = ""; // limpa o campo após leitura
       }
-    }
+    });
+  });
 
-    function finalizar() {
-      alert("Separação finalizada com sucesso!");
-    }
+  function confirmar() {
+    const qtdLida = parseInt(document.getElementById("qtdLida").value);
+    const qtdSeparada = parseInt(document.getElementById("qtdSeparada").value);
+    const qtdASeparar = parseInt(document.getElementById("qtdASeparar").value);
 
-    function voltar() {
-      window.history.back();
+    if (qtdLida < qtdSeparada) {
+      alert("Quantidade lida não corresponde à separação!");
+    } else if (qtdSeparada > qtdASeparar) {
+      alert("Quantidade separada é maior que a quantidade a separar!");
+    } else {
+      alert("Produto separado com sucesso!");
     }
+  }
 
-    function irParaMenu() {
-      window.location.href = "menu.html";
-    }
+  function finalizar() {
+    alert("Separação finalizada com sucesso!");
+  }
 
-    function logout() {
-      window.location.href = "index.html";
-    }
-  </script>
+  function voltar() {
+    window.history.back();
+  }
+
+  function irParaMenu() {
+    window.location.href = "menu.html";
+  }
+
+  function logout() {
+    window.location.href = "index.html";
+  }
+</script>
+
 </body>
 </html>
