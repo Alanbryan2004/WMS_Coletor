@@ -229,16 +229,28 @@
       }
     });
 
+    // Pular foco somente no Enter
     document.getElementById('endereco').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') document.getElementById('etiqueta').focus();
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('etiqueta').focus();
+      }
     });
 
+    // Ao ler etiqueta, vai direto para produto
     document.getElementById('etiqueta').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') document.getElementById('produto').focus();
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('produto').focus();
+      }
     });
 
+    // Ao ler produto, inclui o item
     document.getElementById('produto').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') incluirProduto();
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        incluirProduto();
+      }
     });
 
     function incluirProduto() {
