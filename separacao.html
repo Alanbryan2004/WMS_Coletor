@@ -129,6 +129,17 @@
         padding: 1rem;
       }
     }
+
+    .mensagem {
+      background-color: #28a745;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+      margin-top: 15px;
+      display: none;
+      font-size: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -194,6 +205,8 @@
       <button class="confirmar" onclick="confirmar()">Confirmar</button>
       <button class="finalizar" onclick="finalizar()">Finalizar</button>
     </div>
+
+    <div id="mensagem" class="mensagem"></div>
   </div>
 
   <footer class="rodape">
@@ -204,107 +217,122 @@
     </div>
   </footer>
 
-  <!-- (Mantém o seu HTML e CSS como está acima) -->
-
-<script>
-  let totalLido = 0;
-  let totalSeparado = 0;
-
-  const dadosAgenda = {
-    "000010": {
-      ordem: "000034",
-      sugerido: "D01 C048 R91 P5 N0 A",
-      etiquetaSugerida: "127",
-      qtdSeparada: 0,
-      qtdASeparar: 7,
-      qtdLida: 0
-    }
-  };
-
-  function carregarAgenda() {
-    const agendaSelect = document.getElementById("agenda");
-
-    // Adiciona manualmente a opção de exemplo
-    const option = document.createElement("option");
-    option.value = "000010";
-    option.textContent = "000010";
-    agendaSelect.appendChild(option);
-  }
-
-  function preencherDadosAgenda(valor) {
-    if (dadosAgenda[valor]) {
-      const dados = dadosAgenda[valor];
-      document.getElementById("ordem").value = dados.ordem;
-      document.getElementById("sugerido").value = dados.sugerido;
-      document.getElementById("etiquetaSugerida").value = dados.etiquetaSugerida;
-      document.getElementById("qtdSeparada").value = dados.qtdSeparada;
-      document.getElementById("qtdASeparar").value = dados.qtdASeparar;
-      document.getElementById("qtdLida").value = dados.qtdLida;
-
-      totalLido = dados.qtdLida;
-      totalSeparado = dados.qtdSeparada;
-    } else {
-      // Limpa campos caso a opção seja inválida
-      document.getElementById("ordem").value = "";
-      document.getElementById("sugerido").value = "";
-      document.getElementById("etiquetaSugerida").value = "";
-      document.getElementById("qtdSeparada").value = "";
-      document.getElementById("qtdASeparar").value = "";
-      document.getElementById("qtdLida").value = "";
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    carregarAgenda();
-
-    document.getElementById("agenda").addEventListener("change", (e) => {
-      preencherDadosAgenda(e.target.value);
-    });
-
-    const produtoInput = document.getElementById("produto");
-    produtoInput.addEventListener("input", () => {
-      if (produtoInput.value.length >= 4) {
-        document.getElementById("qtd").value = 1;
-        totalLido += 1;
-        totalSeparado += 1;
-        document.getElementById("qtdLida").value = totalLido;
-        document.getElementById("qtdSeparada").value = totalSeparado;
-        produtoInput.value = "";
+  <script>
+    let dadosAgenda = {
+      "000010": {
+        ordem: "000034",
+        sugerido: "D01 C048 R91 P5 N0 A",
+        etiquetaSugerida: "127",
+        qtdSeparada: 0,
+        qtdASeparar: 7,
+        qtdLida: 0
       }
-    });
-  });
+    };
 
-  function confirmar() {
-    const qtdLida = parseInt(document.getElementById("qtdLida").value);
-    const qtdSeparada = parseInt(document.getElementById("qtdSeparada").value);
-    const qtdASeparar = parseInt(document.getElementById("qtdASeparar").value);
-
-    if (qtdLida < qtdSeparada) {
-      alert("Quantidade lida não corresponde à separação!");
-    } else if (qtdSeparada > qtdASeparar) {
-      alert("Quantidade separada é maior que a quantidade a separar!");
-    } else {
-      alert("Produto separado com sucesso!");
+    function carregarAgenda() {
+      const agendaSelect = document.getElementById("agenda");
+      Object.keys(dadosAgenda).forEach(function(agenda) {
+        const option = document.createElement("option");
+        option.value = agenda;
+        option.textContent = agenda;
+        agendaSelect.appendChild(option);
+      });
     }
-  }
 
-  function finalizar() {
-    alert("Separação finalizada com sucesso!");
-  }
+    window.onload = carregarAgenda;
 
-  function voltar() {
-    window.history.back();
-  }
+    function preencherDadosAgenda(valor) {
+      if (dadosAgenda[valor]) {
+        const dados = dadosAgenda[valor];
+        document.getElementById("ordem").value = dados.ordem;
+        document.getElementById("sugerido").value = dados.sugerido;
+        document.getElementById("etiquetaSugerida").value = dados.etiquetaSugerida;
+        document.getElementById("qtdSeparada").value = dados.qtdSeparada;
+        document.getElementById("qtdASeparar").value = dados.qtdASeparar;
+        document.getElementById("qtdLida").value = dados.qtdLida;
 
-  function irParaMenu() {
-    window.location.href = "menu.html";
-  }
+        // Foca automaticamente no campo "Lê Endereço"
+        document.getElementById("endereco").focus();
+      } else {
+        document.getElementById("ordem").value = "";
+        document.getElementById("sugerido").value = "";
+        document.getElementById("etiquetaSugerida").value = "";
+        document.getElementById("qtdSeparada").value = "";
+        document.getElementById("qtdASeparar").value = "";
+        document.getElementById("qtdLida").value = "";
+      }
+    }
 
-  function logout() {
-    window.location.href = "index.html";
-  }
-</script>
+    document.getElementById("agenda").addEventListener("change", function() {
+      preencherDadosAgenda(this.value);
+    });
 
+    function confirmar() {
+      const qtdLida = document.getElementById("qtdLida").value;
+      const qtdSeparada = document.getElementById("qtdSeparada").value;
+      const qtdASeparar = document.getElementById("qtdASeparar").value;
 
+      if (parseInt(qtdLida) < parseInt(qtdSeparada)) {
+        exibirMensagem("Quantidade lida não corresponde à separação!");
+      } else if (parseInt(qtdSeparada) < parseInt(qtdASeparar)) {
+        exibirMensagem("Quantidade separada é maior que a quantidade a separar!");
+      } else {
+        exibirMensagem("Produto separado com sucesso!");
+      }
+    }
+
+    function finalizar() {
+      alert("Separação finalizada com sucesso!");
+    }
+
+    function voltar() {
+      window.history.back();
+    }
+
+    function irParaMenu() {
+      window.location.href = "menu.html";
+    }
+
+    function logout() {
+      window.location.href = "index.html";
+    }
+
+    function exibirMensagem(mensagem) {
+      const msgDiv = document.getElementById("mensagem");
+      msgDiv.textContent = mensagem;
+      msgDiv.style.display = "block";
+
+      setTimeout(function() {
+        msgDiv.style.display = "none";
+      }, 3000);
+    }
+
+    function autoPularLeitura() {
+      const enderecoField = document.getElementById("endereco");
+      const etiquetaField = document.getElementById("etiqueta");
+      const produtoField = document.getElementById("produto");
+
+      enderecoField.addEventListener("blur", function() {
+        etiquetaField.focus();
+      });
+
+      etiquetaField.addEventListener("blur", function() {
+        produtoField.focus();
+      });
+
+      produtoField.addEventListener("blur", function() {
+        enderecoField.focus();
+        limparCamposLeitura();
+      });
+    }
+
+    autoPularLeitura();
+
+    function limparCamposLeitura() {
+      document.getElementById("endereco").value = "";
+      document.getElementById("etiqueta").value = "";
+      document.getElementById("produto").value = "";
+    }
+  </script>
 </body>
 </html>
