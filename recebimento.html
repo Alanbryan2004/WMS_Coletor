@@ -21,7 +21,7 @@
       justify-content: center;
       align-items: stretch;
       padding: 1rem;
-      padding-bottom: 120px; /* Ajuste do espaço para o rodapé fixo */
+      padding-bottom: 120px;
     }
 
     .container {
@@ -31,7 +31,7 @@
       padding: 1.5rem;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-      min-height: calc(100vh - 120px); /* Espaço para o rodapé fixo */
+      min-height: calc(100vh - 120px);
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -250,6 +250,58 @@
     function finalizar() {
       document.getElementById("mensagem").style.display = "block";
     }
+
+    let totalItens = 10;
+    let itensLidos = 0;
+    let volsLidos = 0;
+
+    document.getElementById("agendaSelect").addEventListener("change", function () {
+      const agenda = this.value;
+
+      if (agenda === "000001") {
+        const nfSelect = document.getElementById("nf");
+        nfSelect.innerHTML = '<option value="">Selecionar</option><option value="102030">102030</option>';
+        document.getElementById("cliente").value = "Mantran Tecnologias LTDA ME";
+      } else {
+        document.getElementById("nf").innerHTML = '<option value="">Selecionar</option>';
+        document.getElementById("cliente").value = "";
+      }
+    });
+
+    document.getElementById("nf").addEventListener("change", function () {
+      const nf = this.value;
+      if (nf === "102030") {
+        document.getElementById("itemLido").value = `0/${totalItens}`;
+        document.getElementById("volLido").value = `0/${totalItens}`;
+        itensLidos = 0;
+        volsLidos = 0;
+      }
+    });
+
+    document.getElementById("produto").addEventListener("change", function () {
+      const produto = this.value.trim();
+      if (produto !== "") {
+        itensLidos++;
+        volsLidos++;
+
+        document.getElementById("qtdItens").value = "1";
+        document.getElementById("qtdVols").value = "1";
+
+        document.getElementById("itemLido").value = `${itensLidos}/${totalItens}`;
+        document.getElementById("volLido").value = `${volsLidos}/${totalItens}`;
+
+        document.getElementById("etiqueta").value = "";
+        document.getElementById("produto").value = "";
+        document.getElementById("etiqueta").focus();
+
+        if (itensLidos >= totalItens && volsLidos >= totalItens) {
+          setTimeout(() => {
+            alert("Contagem finalizada com Sucesso!");
+            document.getElementById("mensagem").style.display = "block";
+          }, 100);
+        }
+      }
+    });
   </script>
 </body>
 </html>
