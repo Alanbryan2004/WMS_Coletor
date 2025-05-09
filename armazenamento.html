@@ -21,7 +21,7 @@
       justify-content: center;
       align-items: stretch;
       padding: 1rem;
-      padding-bottom: 120px;
+      padding-bottom: 120px; /* espaço para o rodapé fixo */
     }
 
     .container {
@@ -85,9 +85,9 @@
       right: 0;
       background-color: #ffffff;
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
-      padding: 10px 20px;
+      padding: 10px 0;
       box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
       z-index: 999;
     }
@@ -95,13 +95,12 @@
     .rodape .icones {
       display: flex;
       width: 100%;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
     }
 
     .rodape .icones i {
       font-size: 22px;
-      flex: 1;
       text-align: center;
       cursor: pointer;
       color: #555;
@@ -175,7 +174,6 @@
     document.getElementById("etiqueta").addEventListener("change", () => {
       const etiqueta = document.getElementById("etiqueta").value.trim();
       if (etiqueta !== "") {
-        // Preencher com dados simulados
         document.getElementById("descricao").value = "Notebook";
         document.getElementById("sugerido").value = "D01 C049 R92 P2 N0 A";
         document.getElementById("endereco").focus();
@@ -186,7 +184,7 @@
       const etiqueta = document.getElementById("etiqueta").value.trim();
       const endereco = document.getElementById("endereco").value.trim();
       if (etiqueta && endereco) {
-        confirmar(); // Simula a inclusão
+        confirmar();
         limparCampos();
       }
     });
