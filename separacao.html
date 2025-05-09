@@ -86,13 +86,18 @@
     .confirmar { background-color: #0d6efd; color: white; }
     .finalizar { background-color: #e2e6ea; color: black; }
 
-    .mensagem {
-      background-color: #d4edda;
-      color: #155724;
-      padding: 10px;
-      margin-top: 10px;
-      text-align: center;
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
       border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      font-weight: bold;
+      z-index: 1000;
       display: none;
     }
 
@@ -136,6 +141,8 @@
   </style>
 </head>
 <body>
+  <div class="toast" id="toast">Produto incluído com sucesso!</div>
+
   <div class="container">
     <div>
       <div class="row">
@@ -179,7 +186,7 @@
         </div>
         <div>
           <label for="qtdASeparar">Qtd. a Separar</label>
-          <input type="text" id="qtdASeparar" class="readonly" readonly>
+          <input type="text" id="qtdASeparar" class="readonly" readonly value="7">
         </div>
       </div>
 
@@ -193,8 +200,6 @@
           <input type="text" id="qtdLida" class="readonly" readonly value="0">
         </div>
       </div>
-
-      <div class="mensagem" id="mensagem">Produto incluído com sucesso!</div>
     </div>
 
     <div class="buttons">
@@ -212,72 +217,61 @@
   </footer>
 
   <script>
-    document.getElementById("agenda").addEventListener("change", function () {
+    document.getElementById('agenda').addEventListener('change', function () {
       if (this.value === "000010") {
-        document.getElementById("ordem").value = "000034";
-        document.getElementById("sugerido").value = "D01 C048 R91 P5 N0 A";
-        document.getElementById("etiquetaSugerida").value = "127";
-        document.getElementById("qtdASeparar").value = "7";
-        document.getElementById("qtdSeparada").value = "0";
-        document.getElementById("qtdLida").value = "0";
-        setTimeout(() => document.getElementById("endereco").focus(), 100);
+        document.getElementById('ordem').value = "000034";
+        document.getElementById('sugerido').value = "D01 C048 R91 P5 N0 A";
+        document.getElementById('etiquetaSugerida').value = "127";
+        document.getElementById('qtdSeparada').value = "0";
+        document.getElementById('qtdASeparar').value = "7";
+        document.getElementById('qtdLida').value = "0";
+        setTimeout(() => document.getElementById('endereco').focus(), 100);
       }
     });
 
-    document.getElementById("endereco").addEventListener("input", function () {
-      const valor = this.value.trim();
-      if (valor !== "") {
-        setTimeout(() => document.getElementById("etiqueta").focus(), 100);
-      }
+    document.getElementById('endereco').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') document.getElementById('etiqueta').focus();
     });
 
-    document.getElementById("etiqueta").addEventListener("input", function () {
-      const valor = this.value.trim();
-      if (valor !== "") {
-        setTimeout(() => document.getElementById("produto").focus(), 100);
-      }
+    document.getElementById('etiqueta').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') document.getElementById('produto').focus();
     });
 
-    document.getElementById("produto").addEventListener("input", function () {
-      const valor = this.value.trim();
-      if (valor !== "") {
-        document.getElementById("quantidade").value = "1";
-        incluirProduto();
-      }
+    document.getElementById('produto').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') incluirProduto();
     });
 
     function incluirProduto() {
-      const qtdSeparada = document.getElementById("qtdSeparada");
-      const qtdLida = document.getElementById("qtdLida");
-      const quantidade = parseInt(document.getElementById("quantidade").value) || 0;
+      const quantidadeInput = document.getElementById('quantidade');
+      quantidadeInput.value = "1";
 
-      qtdSeparada.value = parseInt(qtdSeparada.value || "0") + quantidade;
-      qtdLida.value = parseInt(qtdLida.value || "0") + quantidade;
+      let qtdLida = parseInt(document.getElementById('qtdLida').value || "0");
+      let qtdSeparada = parseInt(document.getElementById('qtdSeparada').value || "0");
+      const qtdNova = parseInt(quantidadeInput.value || "0");
 
-      document.getElementById("endereco").value = "";
-      document.getElementById("etiqueta").value = "";
-      document.getElementById("produto").value = "";
-      document.getElementById("quantidade").value = "";
+      document.getElementById('qtdLida').value = qtdLida + qtdNova;
+      document.getElementById('qtdSeparada').value = qtdSeparada + qtdNova;
 
-      document.getElementById("mensagem").style.display = "block";
-      setTimeout(() => {
-        document.getElementById("mensagem").style.display = "none";
-        document.getElementById("endereco").focus();
-      }, 1500);
+      // Limpa campos de leitura
+      document.getElementById('endereco').value = "";
+      document.getElementById('etiqueta').value = "";
+      document.getElementById('produto').value = "";
+      quantidadeInput.value = "";
+
+      showToast("Produto incluído com sucesso!");
+
+      setTimeout(() => document.getElementById('endereco').focus(), 100);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => toast.style.display = 'none', 2000);
     }
 
     function confirmar() {
-      const qtdLida = document.getElementById("qtdLida").value;
-      const qtdSeparada = document.getElementById("qtdSeparada").value;
-      const qtdASeparar = document.getElementById("qtdASeparar").value;
-
-      if (parseInt(qtdLida) < parseInt(qtdSeparada)) {
-        alert("Quantidade lida não corresponde à separação!");
-      } else if (parseInt(qtdSeparada) < parseInt(qtdASeparar)) {
-        alert("Quantidade separada é menor que a quantidade a separar!");
-      } else {
-        alert("Produto separado com sucesso!");
-      }
+      alert("Produto separado com sucesso!");
     }
 
     function finalizar() {
