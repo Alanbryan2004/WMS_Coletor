@@ -192,7 +192,7 @@
       <div class="row">
         <div>
           <label for="qtd">Quantidade</label>
-          <input type="text" id="qtd">
+          <input type="text" id="qtd" placeholder="Digite ou escaneie">
         </div>
         <div>
           <label for="qtdLida">Qtd. Lida</label>
@@ -268,17 +268,32 @@
     });
 
     function confirmar() {
-      const qtdLida = document.getElementById("qtdLida").value;
-      const qtdSeparada = document.getElementById("qtdSeparada").value;
-      const qtdASeparar = document.getElementById("qtdASeparar").value;
+      const qtdLida = parseInt(document.getElementById("qtdLida").value);
+      const qtdSeparada = parseInt(document.getElementById("qtdSeparada").value);
+      const qtdASeparar = parseInt(document.getElementById("qtdASeparar").value);
+      const qtd = parseInt(document.getElementById("qtd").value);
 
-      if (parseInt(qtdLida) < parseInt(qtdSeparada)) {
-        exibirMensagem("Quantidade lida não corresponde à separação!");
-      } else if (parseInt(qtdSeparada) < parseInt(qtdASeparar)) {
-        exibirMensagem("Quantidade separada é maior que a quantidade a separar!");
-      } else {
-        exibirMensagem("Produto separado com sucesso!");
+      if (isNaN(qtd) || qtd <= 0) {
+        exibirMensagem("Por favor, insira uma quantidade válida.");
+        return;
       }
+
+      // Soma a quantidade lida à quantidade separada
+      const novaQtdSeparada = qtdSeparada + qtd;
+      document.getElementById("qtdSeparada").value = novaQtdSeparada;
+      document.getElementById("qtdLida").value = novaQtdSeparada;
+
+      // Atualiza a quantidade a separar
+      const novaQtdASeparar = qtdASeparar - qtd;
+      document.getElementById("qtdASeparar").value = novaQtdASeparar;
+
+      // Se a quantidade a separar for 0 ou menor, notifica o usuário
+      if (novaQtdASeparar <= 0) {
+        exibirMensagem("Quantidade a separar finalizada!");
+      }
+
+      // Limpa os campos após a leitura
+      limparCamposLeitura();
     }
 
     function finalizar() {
@@ -307,6 +322,13 @@
       }, 3000);
     }
 
+    function limparCamposLeitura() {
+      document.getElementById("endereco").value = "";
+      document.getElementById("etiqueta").value = "";
+      document.getElementById("produto").value = "";
+      document.getElementById("qtd").value = "";
+    }
+
     function autoPularLeitura() {
       const enderecoField = document.getElementById("endereco");
       const etiquetaField = document.getElementById("etiqueta");
@@ -327,12 +349,6 @@
     }
 
     autoPularLeitura();
-
-    function limparCamposLeitura() {
-      document.getElementById("endereco").value = "";
-      document.getElementById("etiqueta").value = "";
-      document.getElementById("produto").value = "";
-    }
   </script>
 </body>
 </html>
