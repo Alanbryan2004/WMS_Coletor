@@ -115,6 +115,33 @@
       color: #c00000;
     }
 
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 140px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 1000;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; bottom: 130px; }
+      to { opacity: 1; bottom: 140px; }
+    }
+
+    @keyframes fadeout {
+      from { opacity: 1; bottom: 140px; }
+      to { opacity: 0; bottom: 130px; }
+    }
+
     @media (max-width: 500px) {
       .container {
         padding: 1rem;
@@ -161,6 +188,9 @@
     </div>
   </footer>
 
+  <!-- Toast -->
+  <div id="toast" class="toast">Produto armazenado com sucesso!</div>
+
   <script>
     document.getElementById("agenda").addEventListener("change", () => {
       const agenda = document.getElementById("agenda").value;
@@ -190,7 +220,11 @@
     });
 
     function confirmar() {
-      alert("Produto armazenado com sucesso!");
+      const toast = document.getElementById("toast");
+      toast.style.display = "block";
+      setTimeout(() => {
+        toast.style.display = "none";
+      }, 3000);
     }
 
     function finalizar() {
