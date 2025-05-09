@@ -6,8 +6,8 @@
   <title>Separação - WMS Coletor</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    /* Adicionando estilo básico */
     * { box-sizing: border-box; }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -15,12 +15,14 @@
       font-family: Arial, sans-serif;
       background: #f4f4f4;
     }
+
     body {
       display: flex;
       justify-content: center;
       align-items: stretch;
       padding: 1rem;
     }
+
     .container {
       width: 100%;
       max-width: 500px;
@@ -34,11 +36,13 @@
       flex-direction: column;
       justify-content: space-between;
     }
+
     label {
       font-weight: bold;
       display: block;
       margin-top: 10px;
     }
+
     input, select {
       width: 100%;
       padding: 10px;
@@ -48,22 +52,27 @@
       border: 1px solid #ccc;
       font-size: 1rem;
     }
+
     .readonly {
       background-color: #e9ecef;
     }
+
     .row {
       display: flex;
       gap: 10px;
     }
+
     .row > div {
       flex: 1;
     }
+
     .buttons {
       display: flex;
       justify-content: space-between;
       gap: 10px;
       margin-top: 20px;
     }
+
     .buttons button {
       flex: 1;
       padding: 10px;
@@ -73,6 +82,7 @@
       font-weight: bold;
       font-size: 1rem;
     }
+
     .confirmar { background-color: #0d6efd; color: white; }
     .finalizar { background-color: #e2e6ea; color: black; }
 
@@ -114,21 +124,24 @@
       color: #c00000;
     }
 
+    #mensagem {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+      z-index: 1000;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
     @media (max-width: 500px) {
       .container {
         padding: 1rem;
       }
-    }
-
-    .mensagem {
-      background-color: #28a745;
-      color: white;
-      padding: 10px;
-      border-radius: 5px;
-      text-align: center;
-      margin-top: 15px;
-      display: none;
-      font-size: 1rem;
     }
   </style>
 </head>
@@ -140,6 +153,7 @@
           <label for="agenda">Agenda</label>
           <select id="agenda">
             <option value="">Selecionar</option>
+            <option value="000010">000010</option>
           </select>
         </div>
         <div>
@@ -170,23 +184,23 @@
 
       <div class="row">
         <div>
-          <label for="qtdSeparada">Qtd. Separada</label>
-          <input type="text" id="qtdSeparada" class="readonly" readonly>
+          <label for="quantidade">Quantidade</label>
+          <input type="text" id="quantidade" class="readonly" readonly>
         </div>
         <div>
-          <label for="qtdASeparar">Qtd. a Separar</label>
-          <input type="text" id="qtdASeparar" class="readonly" readonly>
+          <label for="qtdLida">Qtd. Lida</label>
+          <input type="text" id="qtdLida" class="readonly" readonly value="0">
         </div>
       </div>
 
       <div class="row">
         <div>
-          <label for="quantidade">Quantidade</label>
-          <input type="text" id="quantidade" placeholder="Digite ou escaneie">
+          <label for="qtdSeparada">Qtd. Separada</label>
+          <input type="text" id="qtdSeparada" class="readonly" readonly value="0">
         </div>
         <div>
-          <label for="qtdLida">Qtd. Lida</label>
-          <input type="text" id="qtdLida" class="readonly" readonly>
+          <label for="qtdASeparar">Qtd. a Separar</label>
+          <input type="text" id="qtdASeparar" class="readonly" readonly>
         </div>
       </div>
     </div>
@@ -195,9 +209,9 @@
       <button class="confirmar" onclick="confirmar()">Confirmar</button>
       <button class="finalizar" onclick="finalizar()">Finalizar</button>
     </div>
-
-    <div id="mensagem" class="mensagem"></div>
   </div>
+
+  <div id="mensagem">Produto incluído com sucesso!</div>
 
   <footer class="rodape">
     <div class="icones">
@@ -208,88 +222,52 @@
   </footer>
 
   <script>
-    let dadosAgenda = {
-      "000010": {
-        ordem: "000034",
-        sugerido: "D01 C048 R91 P5 N0 A",
-        etiquetaSugerida: "127",
-        qtdSeparada: 0,
-        qtdASeparar: 7,
-        qtdLida: 0
+    const agendaSelect = document.getElementById("agenda");
+
+    agendaSelect.addEventListener("change", function () {
+      const valor = this.value;
+      if (valor === "000010") {
+        document.getElementById("ordem").value = "000034";
+        document.getElementById("sugerido").value = "D01 C048 R91 P5 N0 A";
+        document.getElementById("etiquetaSugerida").value = "127";
+        document.getElementById("qtdASeparar").value = "7";
+        document.getElementById("qtdSeparada").value = "0";
+        document.getElementById("qtdLida").value = "0";
+        setTimeout(() => document.getElementById("endereco").focus(), 100);
       }
-    };
+    });
 
-    function carregarAgenda() {
-      const agendaSelect = document.getElementById("agenda");
-      Object.keys(dadosAgenda).forEach(function(agenda) {
-        const option = document.createElement("option");
-        option.value = agenda;
-        option.textContent = agenda;
-        agendaSelect.appendChild(option);
-      });
-    }
-
-    window.onload = carregarAgenda;
-
-    function preencherDadosAgenda(valor) {
-      if (dadosAgenda[valor]) {
-        const dados = dadosAgenda[valor];
-        document.getElementById("ordem").value = dados.ordem;
-        document.getElementById("sugerido").value = dados.sugerido;
-        document.getElementById("etiquetaSugerida").value = dados.etiquetaSugerida;
-        document.getElementById("qtdSeparada").value = dados.qtdSeparada;
-        document.getElementById("qtdASeparar").value = dados.qtdASeparar;
-        document.getElementById("qtdLida").value = dados.qtdLida;
-
-        // Foca automaticamente no campo "Lê Endereço"
-        document.getElementById("endereco").focus();
-      } else {
-        document.getElementById("ordem").value = "";
-        document.getElementById("sugerido").value = "";
-        document.getElementById("etiquetaSugerida").value = "";
-        document.getElementById("qtdSeparada").value = "";
-        document.getElementById("qtdASeparar").value = "";
-        document.getElementById("qtdLida").value = "";
+    document.getElementById("produto").addEventListener("input", function () {
+      const produto = this.value.trim();
+      if (produto !== "") {
+        document.getElementById("quantidade").value = "1";
+        setTimeout(() => confirmar(), 100);
       }
-    }
-
-    document.getElementById("agenda").addEventListener("change", function() {
-      preencherDadosAgenda(this.value);
     });
 
     function confirmar() {
-      const qtdLida = parseInt(document.getElementById("qtdLida").value) || 0;
-      const qtdSeparada = parseInt(document.getElementById("qtdSeparada").value) || 0;
-      const qtdASeparar = parseInt(document.getElementById("qtdASeparar").value) || 0;
-      const quantidade = parseInt(document.getElementById("quantidade").value);
+      const qtdSeparada = document.getElementById("qtdSeparada");
+      const qtdLida = document.getElementById("qtdLida");
+      const quantidade = parseInt(document.getElementById("quantidade").value) || 0;
 
-      if (isNaN(quantidade) || quantidade <= 0) {
-        exibirMensagem("Por favor, insira uma quantidade válida.");
-        return;
-      }
+      qtdSeparada.value = parseInt(qtdSeparada.value || "0") + quantidade;
+      qtdLida.value = parseInt(qtdLida.value || "0") + quantidade;
 
-      // Atualiza Qtd Lida
-      const novaQtdLida = qtdLida + quantidade;
-      document.getElementById("qtdLida").value = novaQtdLida;
-
-      // Soma a quantidade lida à quantidade separada
-      const novaQtdSeparada = qtdSeparada + quantidade;
-      document.getElementById("qtdSeparada").value = novaQtdSeparada;
-
-      // Atualiza a quantidade a separar
-      const novaQtdASeparar = qtdASeparar - quantidade;
-      document.getElementById("qtdASeparar").value = novaQtdASeparar;
-
-      // Atualiza o campo Quantidade
+      document.getElementById("endereco").value = "";
+      document.getElementById("etiqueta").value = "";
+      document.getElementById("produto").value = "";
       document.getElementById("quantidade").value = "";
 
-      // Se a quantidade a separar for 0 ou menor, notifica o usuário
-      if (novaQtdASeparar <= 0) {
-        exibirMensagem("Quantidade a separar finalizada!");
-      }
+      mostrarMensagem("Produto incluído com sucesso!");
 
-      // Limpa os campos após a leitura
-      limparCamposLeitura();
+      setTimeout(() => document.getElementById("endereco").focus(), 100);
+    }
+
+    function mostrarMensagem(msg) {
+      const div = document.getElementById("mensagem");
+      div.textContent = msg;
+      div.style.display = "block";
+      setTimeout(() => div.style.display = "none", 2000);
     }
 
     function finalizar() {
@@ -306,23 +284,6 @@
 
     function logout() {
       window.location.href = "index.html";
-    }
-
-    function exibirMensagem(mensagem) {
-      const msgDiv = document.getElementById("mensagem");
-      msgDiv.textContent = mensagem;
-      msgDiv.style.display = "block";
-
-      setTimeout(function() {
-        msgDiv.style.display = "none";
-      }, 3000);
-    }
-
-    function limparCamposLeitura() {
-      document.getElementById("endereco").value = "";
-      document.getElementById("etiqueta").value = "";
-      document.getElementById("produto").value = "";
-      document.getElementById("quantidade").value = "";
     }
   </script>
 </body>
