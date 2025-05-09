@@ -268,9 +268,9 @@
     });
 
     function confirmar() {
-      const qtdLida = parseInt(document.getElementById("qtdLida").value);
-      const qtdSeparada = parseInt(document.getElementById("qtdSeparada").value);
-      const qtdASeparar = parseInt(document.getElementById("qtdASeparar").value);
+      const qtdLida = parseInt(document.getElementById("qtdLida").value) || 0;
+      const qtdSeparada = parseInt(document.getElementById("qtdSeparada").value) || 0;
+      const qtdASeparar = parseInt(document.getElementById("qtdASeparar").value) || 0;
       const qtd = parseInt(document.getElementById("qtd").value);
 
       if (isNaN(qtd) || qtd <= 0) {
@@ -278,10 +278,13 @@
         return;
       }
 
+      // Atualiza Qtd Lida
+      const novaQtdLida = qtdLida + qtd;
+      document.getElementById("qtdLida").value = novaQtdLida;
+
       // Soma a quantidade lida à quantidade separada
       const novaQtdSeparada = qtdSeparada + qtd;
       document.getElementById("qtdSeparada").value = novaQtdSeparada;
-      document.getElementById("qtdLida").value = novaQtdSeparada;
 
       // Atualiza a quantidade a separar
       const novaQtdASeparar = qtdASeparar - qtd;
