@@ -231,77 +231,82 @@
   </footer>
 
   <script>
-    function voltar() {
-      window.history.back();
+  function voltar() {
+    window.history.back();
+  }
+
+  function irParaMenu() {
+    window.location.href = 'menu.html';
+  }
+
+  function logout() {
+    window.location.href = 'index.html';
+  }
+
+  function confirmar() {
+    alert("Função Confirmar executada.");
+  }
+
+  function finalizar() {
+    document.getElementById("mensagem").style.display = "block";
+  }
+
+  let totalItens = 10;
+  let itensLidos = 0;
+  let volsLidos = 0;
+
+  document.getElementById("agendaSelect").addEventListener("change", function () {
+    const agenda = this.value;
+
+    if (agenda === "000001") {
+      const nfSelect = document.getElementById("nf");
+      nfSelect.innerHTML = '<option value="">Selecionar</option><option value="102030">102030</option>';
+      document.getElementById("cliente").value = "Mantran Tecnologias LTDA ME";
+    } else {
+      document.getElementById("nf").innerHTML = '<option value="">Selecionar</option>';
+      document.getElementById("cliente").value = "";
     }
+  });
 
-    function irParaMenu() {
-      window.location.href = 'menu.html';
+  document.getElementById("nf").addEventListener("change", function () {
+    const nf = this.value;
+    if (nf === "102030") {
+      document.getElementById("itemLido").value = `0/${totalItens}`;
+      document.getElementById("volLido").value = `0/${totalItens}`;
+      itensLidos = 0;
+      volsLidos = 0;
     }
+  });
 
-    function logout() {
-      window.location.href = 'index.html';
-    }
+  // FOCO APÓS "Lê Etiqueta"
+  document.getElementById("etiqueta").addEventListener("change", function () {
+    document.getElementById("produto").focus();
+  });
 
-    function confirmar() {
-      alert("Função Confirmar executada.");
-    }
+  document.getElementById("produto").addEventListener("change", function () {
+    const produto = this.value.trim();
+    if (produto !== "") {
+      itensLidos++;
+      volsLidos++;
 
-    function finalizar() {
-      document.getElementById("mensagem").style.display = "block";
-    }
+      document.getElementById("qtdItens").value = "1";
+      document.getElementById("qtdVols").value = "1";
 
-    let totalItens = 10;
-    let itensLidos = 0;
-    let volsLidos = 0;
+      document.getElementById("itemLido").value = `${itensLidos}/${totalItens}`;
+      document.getElementById("volLido").value = `${volsLidos}/${totalItens}`;
 
-    document.getElementById("agendaSelect").addEventListener("change", function () {
-      const agenda = this.value;
+      document.getElementById("etiqueta").value = "";
+      document.getElementById("produto").value = "";
+      document.getElementById("etiqueta").focus();
 
-      if (agenda === "000001") {
-        const nfSelect = document.getElementById("nf");
-        nfSelect.innerHTML = '<option value="">Selecionar</option><option value="102030">102030</option>';
-        document.getElementById("cliente").value = "Mantran Tecnologias LTDA ME";
-      } else {
-        document.getElementById("nf").innerHTML = '<option value="">Selecionar</option>';
-        document.getElementById("cliente").value = "";
+      if (itensLidos >= totalItens && volsLidos >= totalItens) {
+        setTimeout(() => {
+          alert("Contagem finalizada com Sucesso!");
+          document.getElementById("mensagem").style.display = "block";
+        }, 100);
       }
-    });
-
-    document.getElementById("nf").addEventListener("change", function () {
-      const nf = this.value;
-      if (nf === "102030") {
-        document.getElementById("itemLido").value = `0/${totalItens}`;
-        document.getElementById("volLido").value = `0/${totalItens}`;
-        itensLidos = 0;
-        volsLidos = 0;
-      }
-    });
-
-    document.getElementById("produto").addEventListener("change", function () {
-      const produto = this.value.trim();
-      if (produto !== "") {
-        itensLidos++;
-        volsLidos++;
-
-        document.getElementById("qtdItens").value = "1";
-        document.getElementById("qtdVols").value = "1";
-
-        document.getElementById("itemLido").value = `${itensLidos}/${totalItens}`;
-        document.getElementById("volLido").value = `${volsLidos}/${totalItens}`;
-
-        document.getElementById("etiqueta").value = "";
-        document.getElementById("produto").value = "";
-        document.getElementById("etiqueta").focus();
-
-        if (itensLidos >= totalItens && volsLidos >= totalItens) {
-          setTimeout(() => {
-            alert("Contagem finalizada com Sucesso!");
-            document.getElementById("mensagem").style.display = "block";
-          }, 100);
-        }
-      }
-    });
-  </script>
+    }
+  });
+</script>
 </body>
 </html>
