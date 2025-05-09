@@ -6,24 +6,139 @@
   <title>Separação - WMS Coletor</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    /* ... seu CSS existente ... */
-    .toast {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background: #28a745;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
-      z-index: 9999;
-      animation: fadeOut 3s forwards;
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
     }
 
-    @keyframes fadeOut {
-      0% { opacity: 1; }
-      80% { opacity: 1; }
-      100% { opacity: 0; display: none; }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 1rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      max-height: calc(100vh - 80px); /* considera a altura do rodapé */
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .readonly {
+      background-color: #e9ecef;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .row > div {
+      flex: 1;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .confirmar { background-color: #0d6efd; color: white; }
+    .finalizar { background-color: #e2e6ea; color: black; }
+
+    footer.rodape {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+    }
+
+    .rodape .icones {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rodape .icones i {
+      font-size: 22px;
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      color: #555;
+      transition: color 0.3s ease;
+    }
+
+    .rodape .icones i:hover {
+      color: #0d6efd;
+    }
+
+    .rodape .icones i.ativo {
+      color: #c00000;
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 1rem;
+      }
+    }
+
+    .mensagem {
+      background-color: #28a745;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+      margin-top: 15px;
+      display: none;
+      font-size: 1rem;
     }
   </style>
 </head>
@@ -35,7 +150,6 @@
           <label for="agenda">Agenda</label>
           <select id="agenda">
             <option value="">Selecionar</option>
-            <option value="000010">000010</option>
           </select>
         </div>
         <div>
@@ -57,7 +171,7 @@
         </div>
         <div>
           <label for="etiquetaSugerida">Etiqueta Sugerida</label>
-          <input type="text" id="etiquetaSugerida" class="readonly" readonly tabindex="-1">
+          <input type="text" id="etiquetaSugerida" class="readonly" readonly>
         </div>
       </div>
 
@@ -67,22 +181,22 @@
       <div class="row">
         <div>
           <label for="qtdSeparada">Qtd. Separada</label>
-          <input type="text" id="qtdSeparada" class="readonly" readonly value="0">
+          <input type="text" id="qtdSeparada" class="readonly" readonly>
         </div>
         <div>
           <label for="qtdASeparar">Qtd. a Separar</label>
-          <input type="text" id="qtdASeparar" class="readonly" readonly value="7">
+          <input type="text" id="qtdASeparar" class="readonly" readonly>
         </div>
       </div>
 
       <div class="row">
         <div>
-          <label for="quantidade">Quantidade</label>
-          <input type="text" id="quantidade" class="readonly" readonly>
+          <label for="qtd">Quantidade</label>
+          <input type="text" id="qtd">
         </div>
         <div>
           <label for="qtdLida">Qtd. Lida</label>
-          <input type="text" id="qtdLida" class="readonly" readonly value="0">
+          <input type="text" id="qtdLida" class="readonly" readonly>
         </div>
       </div>
     </div>
@@ -91,6 +205,8 @@
       <button class="confirmar" onclick="confirmar()">Confirmar</button>
       <button class="finalizar" onclick="finalizar()">Finalizar</button>
     </div>
+
+    <div id="mensagem" class="mensagem"></div>
   </div>
 
   <footer class="rodape">
@@ -102,75 +218,67 @@
   </footer>
 
   <script>
-    const agenda = document.getElementById("agenda");
-    const ordem = document.getElementById("ordem");
-    const sugerido = document.getElementById("sugerido");
-    const etiquetaSugerida = document.getElementById("etiquetaSugerida");
-    const qtdSeparada = document.getElementById("qtdSeparada");
-    const qtdLida = document.getElementById("qtdLida");
-    const qtdASeparar = document.getElementById("qtdASeparar");
-    const endereco = document.getElementById("endereco");
-    const etiqueta = document.getElementById("etiqueta");
-    const produto = document.getElementById("produto");
-    const quantidade = document.getElementById("quantidade");
-
-    agenda.addEventListener("change", () => {
-      if (agenda.value === "000010") {
-        ordem.value = "000034";
-        sugerido.value = "D01 C048 R91 P5 N0 A";
-        etiquetaSugerida.value = "127";
-        qtdSeparada.value = "0";
-        qtdLida.value = "0";
-        qtdASeparar.value = "7";
-        endereco.focus();
+    let dadosAgenda = {
+      "000010": {
+        ordem: "000034",
+        sugerido: "D01 C048 R91 P5 N0 A",
+        etiquetaSugerida: "127",
+        qtdSeparada: 0,
+        qtdASeparar: 7,
+        qtdLida: 0
       }
-    });
+    };
 
-    endereco.addEventListener("keydown", e => {
-      if (e.key === "Enter") etiqueta.focus();
-    });
+    function carregarAgenda() {
+      const agendaSelect = document.getElementById("agenda");
+      Object.keys(dadosAgenda).forEach(function(agenda) {
+        const option = document.createElement("option");
+        option.value = agenda;
+        option.textContent = agenda;
+        agendaSelect.appendChild(option);
+      });
+    }
 
-    etiqueta.addEventListener("keydown", e => {
-      if (e.key === "Enter") produto.focus();
-    });
+    window.onload = carregarAgenda;
 
-    produto.addEventListener("keydown", e => {
-      if (e.key === "Enter") {
-        quantidade.value = "1";
-        incluirProduto();
+    function preencherDadosAgenda(valor) {
+      if (dadosAgenda[valor]) {
+        const dados = dadosAgenda[valor];
+        document.getElementById("ordem").value = dados.ordem;
+        document.getElementById("sugerido").value = dados.sugerido;
+        document.getElementById("etiquetaSugerida").value = dados.etiquetaSugerida;
+        document.getElementById("qtdSeparada").value = dados.qtdSeparada;
+        document.getElementById("qtdASeparar").value = dados.qtdASeparar;
+        document.getElementById("qtdLida").value = dados.qtdLida;
+
+        // Foca automaticamente no campo "Lê Endereço"
+        document.getElementById("endereco").focus();
+      } else {
+        document.getElementById("ordem").value = "";
+        document.getElementById("sugerido").value = "";
+        document.getElementById("etiquetaSugerida").value = "";
+        document.getElementById("qtdSeparada").value = "";
+        document.getElementById("qtdASeparar").value = "";
+        document.getElementById("qtdLida").value = "";
       }
+    }
+
+    document.getElementById("agenda").addEventListener("change", function() {
+      preencherDadosAgenda(this.value);
     });
-
-    function incluirProduto() {
-      let qtd = parseInt(quantidade.value) || 0;
-      let lida = parseInt(qtdLida.value) || 0;
-      let separada = parseInt(qtdSeparada.value) || 0;
-
-      qtdLida.value = lida + qtd;
-      qtdSeparada.value = separada + qtd;
-
-      showToast("Produto incluído!");
-      limparCampos();
-      endereco.focus();
-    }
-
-    function limparCampos() {
-      endereco.value = "";
-      etiqueta.value = "";
-      produto.value = "";
-      quantidade.value = "";
-    }
-
-    function showToast(msg) {
-      const toast = document.createElement("div");
-      toast.className = "toast";
-      toast.textContent = msg;
-      document.body.appendChild(toast);
-      setTimeout(() => document.body.removeChild(toast), 3000);
-    }
 
     function confirmar() {
-      alert("Produto separado com sucesso!");
+      const qtdLida = document.getElementById("qtdLida").value;
+      const qtdSeparada = document.getElementById("qtdSeparada").value;
+      const qtdASeparar = document.getElementById("qtdASeparar").value;
+
+      if (parseInt(qtdLida) < parseInt(qtdSeparada)) {
+        exibirMensagem("Quantidade lida não corresponde à separação!");
+      } else if (parseInt(qtdSeparada) < parseInt(qtdASeparar)) {
+        exibirMensagem("Quantidade separada é maior que a quantidade a separar!");
+      } else {
+        exibirMensagem("Produto separado com sucesso!");
+      }
     }
 
     function finalizar() {
@@ -187,6 +295,43 @@
 
     function logout() {
       window.location.href = "index.html";
+    }
+
+    function exibirMensagem(mensagem) {
+      const msgDiv = document.getElementById("mensagem");
+      msgDiv.textContent = mensagem;
+      msgDiv.style.display = "block";
+
+      setTimeout(function() {
+        msgDiv.style.display = "none";
+      }, 3000);
+    }
+
+    function autoPularLeitura() {
+      const enderecoField = document.getElementById("endereco");
+      const etiquetaField = document.getElementById("etiqueta");
+      const produtoField = document.getElementById("produto");
+
+      enderecoField.addEventListener("blur", function() {
+        etiquetaField.focus();
+      });
+
+      etiquetaField.addEventListener("blur", function() {
+        produtoField.focus();
+      });
+
+      produtoField.addEventListener("blur", function() {
+        enderecoField.focus();
+        limparCamposLeitura();
+      });
+    }
+
+    autoPularLeitura();
+
+    function limparCamposLeitura() {
+      document.getElementById("endereco").value = "";
+      document.getElementById("etiqueta").value = "";
+      document.getElementById("produto").value = "";
     }
   </script>
 </body>
