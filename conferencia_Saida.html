@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Retirada - WMS Coletor</title>
+  <title>Retirada de Mercadorias - WMS Coletor</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     * { box-sizing: border-box; }
@@ -34,7 +34,7 @@
       min-height: calc(100vh - 120px);
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: flex-start;
     }
 
     label {
@@ -66,36 +66,13 @@
     .inline-fields {
       display: flex;
       gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 10px;
     }
 
-    .inline-fields .field {
+    .field {
       flex: 1;
     }
-
-    .buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
-    }
-
-    .buttons button {
-      flex: 1;
-      padding: 8px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 1rem;
-      margin-right: 10px;
-    }
-
-    .buttons button:last-child {
-      margin-right: 0;
-    }
-
-    .confirmar { background-color: #0d6efd; color: white; }
-    .finalizar { background-color: #e2e6ea; color: black; }
-    .sair { background-color: transparent; color: black; border: 1px solid #ccc; }
 
     .mensagem-final {
       background-color: #d4edda;
@@ -150,58 +127,52 @@
 </head>
 <body>
   <div class="container">
-    <div>
-      <div class="inline-fields">
-        <div class="field">
-          <label for="agendaSelect">Agenda</label>
-          <select id="agendaSelect">
-            <option value="">Selecionar</option>
-            <option value="000001">000001</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="os">Nº OS</label>
-          <input type="text" id="os" class="readonly" readonly />
-        </div>
+    <div class="inline-fields">
+      <div class="field">
+        <label for="agendaSelect">Agenda</label>
+        <select id="agendaSelect">
+          <option value="">Selecionar</option>
+          <option value="000001">000001</option>
+        </select>
       </div>
-
-      <label for="etiqueta">Lê Etiqueta</label>
-      <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
-
-      <label for="produto">Lê Produto</label>
-      <input type="text" id="produto" placeholder="Digite ou escaneie" />
-
-      <label for="descricao">Descrição do Produto</label>
-      <input type="text" id="descricao" class="readonly" readonly />
-
-      <div class="grid">
-        <div>
-          <label>Qtde Itens</label>
-          <input type="text" id="qtdItens" value="0" readonly />
-        </div>
-        <div>
-          <label>Item Lido / Conferir</label>
-          <input type="text" id="itemLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
-        </div>
-        <div>
-          <label>Qtde Vols</label>
-          <input type="text" id="qtdVols" value="0" readonly />
-        </div>
-        <div>
-          <label>Vol Lido / Conferir</label>
-          <input type="text" id="volLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
-        </div>
+      <div class="field">
+        <label for="os">Nº OS</label>
+        <input type="text" id="os" class="readonly" readonly />
       </div>
-
-      <label for="cliente">Cliente</label>
-      <input type="text" readonly class="readonly" id="cliente" />
-      <div class="mensagem-final" id="mensagem"></div>
     </div>
 
-    <div class="buttons">
-      <button class="confirmar" onclick="confirmar()">Confirmar</button>
-      <button class="finalizar" onclick="finalizar()">Finalizar</button>
+    <label for="etiqueta">Lê Etiqueta</label>
+    <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
+
+    <label for="produto">Lê Produto</label>
+    <input type="text" id="produto" placeholder="Digite ou escaneie" />
+
+    <label for="descricao">Descrição do Produto</label>
+    <input type="text" id="descricao" class="readonly" readonly />
+
+    <div class="grid">
+      <div>
+        <label>Qtde Itens</label>
+        <input type="text" id="qtdItens" value="0" readonly />
+      </div>
+      <div>
+        <label>Item Lido / Conferir</label>
+        <input type="text" id="itemLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+      </div>
+      <div>
+        <label>Qtde Vols</label>
+        <input type="text" id="qtdVols" value="0" readonly />
+      </div>
+      <div>
+        <label>Vol Lido / Conferir</label>
+        <input type="text" id="volLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+      </div>
     </div>
+
+    <label for="cliente">Cliente</label>
+    <input type="text" readonly class="readonly" id="cliente" />
+
+    <div class="mensagem-final" id="mensagem"></div>
   </div>
 
   <footer class="rodape">
@@ -213,10 +184,6 @@
   </footer>
 
   <script>
-    let totalItens = 10;
-    let itensLidos = 0;
-    let volsLidos = 0;
-
     function voltar() {
       window.history.back();
     }
@@ -229,14 +196,6 @@
       window.location.href = 'index.html';
     }
 
-    function confirmar() {
-      mostrarMensagem("Produto armazenado com sucesso!");
-    }
-
-    function finalizar() {
-      mostrarMensagem("Conferência Finalizada com Sucesso!");
-    }
-
     function mostrarMensagem(msg) {
       const mensagemDiv = document.getElementById("mensagem");
       mensagemDiv.textContent = msg;
@@ -246,8 +205,13 @@
       }, 3000);
     }
 
+    let totalItens = 10;
+    let itensLidos = 0;
+    let volsLidos = 0;
+
     document.getElementById("agendaSelect").addEventListener("change", function () {
       const agenda = this.value;
+
       if (agenda === "000001") {
         document.getElementById("os").value = "102030";
         document.getElementById("cliente").value = "Mantran Tecnologias LTDA ME";
@@ -256,6 +220,11 @@
         itensLidos = 0;
         volsLidos = 0;
         document.getElementById("etiqueta").focus();
+      } else {
+        document.getElementById("os").value = "";
+        document.getElementById("cliente").value = "";
+        document.getElementById("itemLido").value = `0/0`;
+        document.getElementById("volLido").value = `0/0`;
       }
     });
 
@@ -272,6 +241,7 @@
         document.getElementById("descricao").value = "Notebook Acer";
         document.getElementById("qtdItens").value = "1";
         document.getElementById("qtdVols").value = "1";
+
         document.getElementById("itemLido").value = `${itensLidos}/${totalItens}`;
         document.getElementById("volLido").value = `${volsLidos}/${totalItens}`;
 
