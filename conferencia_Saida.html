@@ -186,7 +186,7 @@
       <input type="text" id="produto" placeholder="Digite ou escaneie" />
 
       <label for="descricaoProduto">Descrição do Produto</label>
-      <input type="text" id="descricaoProduto" placeholder="Digite a descrição do produto" />
+      <input type="text" id="descricaoProduto" readonly class="readonly" />
 
       <div class="grid">
         <div>
@@ -195,7 +195,7 @@
         </div>
         <div>
           <label>Item Lido / Conferir</label>
-          <input type="text" id="itemLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+          <input type="text" id="itemLido" class="readonly" readonly value="0/10" style="background-color:#f8d7da" />
         </div>
         <div>
           <label>Qtde Vols</label>
@@ -203,7 +203,7 @@
         </div>
         <div>
           <label>Vol Lido / Conferir</label>
-          <input type="text" id="volLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+          <input type="text" id="volLido" class="readonly" readonly value="0/10" style="background-color:#f8d7da" />
         </div>
       </div>
 
@@ -234,6 +234,10 @@
     const clienteInput = document.getElementById('cliente');
     const descricaoProdutoInput = document.getElementById('descricaoProduto');
     const produtoInput = document.getElementById('produto');
+    const qtdItensInput = document.getElementById('qtdItens');
+    const qtdVolsInput = document.getElementById('qtdVols');
+    const itemLidoInput = document.getElementById('itemLido');
+    const volLidoInput = document.getElementById('volLido');
     const camposParaBloquear = [
       document.getElementById('etiqueta'),
       produtoInput,
@@ -256,11 +260,15 @@
         osInput.value = '00075689'; // Preenche a OS automaticamente
         clienteInput.value = 'Mantran Tecnologias LTDA Me'; // Preenche o Cliente
         descricaoProdutoInput.value = ''; // Limpa o campo de Descrição do Produto
+        itemLidoInput.value = '0/10'; // Preenche Item Lido / Conferir
+        volLidoInput.value = '0/10'; // Preenche Vol Lido / Conferir
         bloquearCampos(false); // Libera os campos
       } else {
         osInput.value = ''; // Limpa o campo de OS
         clienteInput.value = ''; // Limpa o campo de Cliente
         descricaoProdutoInput.value = ''; // Limpa o campo de Descrição do Produto
+        itemLidoInput.value = ''; // Limpa o campo Item Lido / Conferir
+        volLidoInput.value = ''; // Limpa o campo Vol Lido / Conferir
         bloquearCampos(true); // Bloqueia novamente se selecionar algo inválido
       }
     });
@@ -268,6 +276,8 @@
     produtoInput.addEventListener('input', () => {
       if (produtoInput.value) {
         descricaoProdutoInput.value = 'Notebook Acer'; // Preenche a descrição do produto
+        qtdItensInput.value = '1'; // Atualiza Qtde Itens
+        qtdVolsInput.value = '1'; // Atualiza Qtde Vols
       }
     });
 
