@@ -10,14 +10,13 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f4f4f4;
-      padding: 1rem 1rem 6rem;
+      padding: 1rem;
       box-sizing: border-box;
-      min-height: 100vh;
     }
 
     h2 {
       text-align: center;
-      margin: 0 0 1rem;
+      margin-bottom: 1rem;
     }
 
     .form-group {
@@ -69,68 +68,43 @@
 
     .acoes {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
-      position: fixed;
-      bottom: 50px;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      padding-bottom: 0.5rem;
       width: 100%;
-      padding: 0 1rem;
       box-sizing: border-box;
-      z-index: 998;
     }
 
     .acoes button {
-      flex: 1;
-      max-width: 150px;
+      flex: 1 1 30%;
       min-width: 100px;
-      padding: 10px 15px;
-      font-size: 14px;
+      max-width: 150px;
+      padding: 10px;
       font-weight: bold;
+      font-size: 14px;
       border: none;
       border-radius: 8px;
       background-color: #c00000;
       color: white;
       cursor: pointer;
       transition: background 0.2s ease;
+      box-sizing: border-box;
     }
 
     .acoes button:hover {
       background-color: #a00000;
     }
 
-    .rodape {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background-color: #ffffff;
-      border-top: 1px solid #ddd;
-      color: #555;
-      font-size: 12px;
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 999;
-      box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+    .nowrap {
+      flex-wrap: nowrap !important;
     }
 
     @media (max-width: 600px) {
       .row.nowrap {
         flex-wrap: nowrap;
         overflow-x: auto;
-      }
-
-      .acoes {
-        gap: 10px;
-      }
-
-      .acoes button {
-        max-width: 100%;
-      }
-
-      .rodape {
-        font-size: 10px;
-        padding: 8px 16px;
       }
     }
   </style>
@@ -195,15 +169,9 @@
   </table>
 
   <div class="acoes">
-    <button onclick="finalizarAgenda()"><i class="fas fa-check"></i> Finalizar</button>
-    <button onclick="zerarGrid()"><i class="fas fa-eraser"></i> Zerar</button>
-    <button onclick="voltar()"><i class="fas fa-arrow-left"></i> Sair</button>
-  </div>
-
-  <footer class="rodape">
-    <span>© 2025 Mantran Tecnologias</span>
-    <span>Versão 1.0</span>
-  </footer>
+    <button onclick="finalizarAgenda()">Finalizar</button>
+    <button onclick="zerarGrid()">Zerar</button>
+   </div>
 
   <script>
     let itensLidos = [];
@@ -245,7 +213,7 @@
       const totalItens = itensLidos.reduce((sum, item) => sum + Number(item.qtdItem), 0);
       const totalLidos = itensLidos.reduce((sum, item) => sum + Number(item.qtdLida), 0);
 
-      document.getElementById("qtdLidaItens").value = `${totalLidos} / ${totalItens}`;
+      document.getElementById("qtdLidaItens").value = ${totalLidos} / ${totalItens};
       document.getElementById("qtdTotal").value = totalItens;
     }
 
@@ -254,12 +222,12 @@
       tbody.innerHTML = "";
       itensLidos.forEach(item => {
         const row = document.createElement("tr");
-        row.innerHTML = `
+        row.innerHTML = 
           <td>${item.codigo}</td>
           <td>${item.descricao}</td>
           <td>${item.qtdItem}</td>
           <td>${item.qtdLida}</td>
-        `;
+        ;
         tbody.appendChild(row);
       });
     }
