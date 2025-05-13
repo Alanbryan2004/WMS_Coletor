@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Recebimento - WMS Coletor</title>
+  <title>Conferencia Saida - WMS Coletor</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     * { box-sizing: border-box; }
@@ -174,14 +174,17 @@
         </div>
       </div>
 
+      <label for="cliente">Cliente</label>
+      <input type="text" readonly class="readonly" id="cliente" />
+
       <label for="etiqueta">Lê Etiqueta</label>
       <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
 
+      <label for="descricaoProduto">Descrição do Produto</label>
+      <input type="text" id="descricaoProduto" placeholder="Digite a descrição do produto" />
+
       <div class="inline-group">
         <label for="produto" style="flex: 2;">Lê Produto</label>
-        <label style="flex: 1; display: flex; align-items: center; white-space: nowrap;">
-          <input type="checkbox" id="volume" style="margin-right: 5px;" /> Volume Paletizado
-        </label>
       </div>
       <input type="text" id="produto" placeholder="Digite ou escaneie" />
 
@@ -203,9 +206,6 @@
           <input type="text" id="volLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
         </div>
       </div>
-
-      <label for="cliente">Cliente</label>
-      <input type="text" readonly class="readonly" id="cliente" />
 
       <div id="itensRecebimento"></div>
 
@@ -232,10 +232,10 @@
     const agendaSelect = document.getElementById('agendaSelect');
     const nfInput = document.getElementById('nf');
     const clienteInput = document.getElementById('cliente');
+    const descricaoProdutoInput = document.getElementById('descricaoProduto');
     const camposParaBloquear = [
       document.getElementById('etiqueta'),
       document.getElementById('produto'),
-      document.getElementById('volume'),
     ];
 
     // Bloquear os campos no início
@@ -254,10 +254,12 @@
       if (agendaSelecionada === '000001') {
         nfInput.value = '00075689'; // Preenche o NF automaticamente
         clienteInput.value = 'Mantran Tecnologias LTDA Me'; // Preenche o Cliente
+        descricaoProdutoInput.value = 'Produto A'; // Preenche a Descrição do Produto
         bloquearCampos(false); // Libera os campos
       } else {
         nfInput.value = ''; // Limpa o campo de NF
         clienteInput.value = ''; // Limpa o campo de Cliente
+        descricaoProdutoInput.value = ''; // Limpa o campo de Descrição do Produto
         bloquearCampos(true); // Bloqueia novamente se selecionar algo inválido
       }
     });
