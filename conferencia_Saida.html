@@ -170,9 +170,7 @@
         </div>
         <div class="field">
           <label for="nf">Nº NF</label>
-          <select id="nf">
-            <option value="">Selecionar</option>
-          </select>
+          <input type="text" id="nf" readonly />
         </div>
       </div>
 
@@ -232,7 +230,7 @@
 
   <script>
     const agendaSelect = document.getElementById('agendaSelect');
-    const nfSelect = document.getElementById('nf');
+    const nfInput = document.getElementById('nf');
     const clienteInput = document.getElementById('cliente');
     const camposParaBloquear = [
       document.getElementById('etiqueta'),
@@ -253,18 +251,13 @@
     agendaSelect.addEventListener('change', () => {
       const agendaSelecionada = agendaSelect.value;
 
-      nfSelect.innerHTML = '<option value="">Selecionar</option>'; // Limpa opções anteriores
-
       if (agendaSelecionada === '000001') {
-        // Adiciona a NF vinculada
-        const option = document.createElement('option');
-        option.value = '00075689';
-        option.text = '00075689';
-        nfSelect.appendChild(option);
-        nfSelect.value = '00075689'; // Seleciona automaticamente
+        nfInput.value = '00075689'; // Preenche o NF automaticamente
         clienteInput.value = 'Mantran Tecnologias LTDA Me'; // Preenche o Cliente
         bloquearCampos(false); // Libera os campos
       } else {
+        nfInput.value = ''; // Limpa o campo de NF
+        clienteInput.value = ''; // Limpa o campo de Cliente
         bloquearCampos(true); // Bloqueia novamente se selecionar algo inválido
       }
     });
