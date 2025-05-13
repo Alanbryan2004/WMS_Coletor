@@ -40,7 +40,7 @@
     label {
       font-weight: bold;
       display: block;
-      margin-top: 15px;
+      margin-top: 10px;
     }
 
     input, select {
@@ -63,10 +63,20 @@
       background-color: #e9ecef;
     }
 
+    .inline-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .inline-group > label {
+      margin: 0;
+    }
+
     .inline-fields {
       display: flex;
       gap: 10px;
-      margin-top: 10px;
     }
 
     .inline-fields .field {
@@ -75,25 +85,28 @@
 
     .buttons {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      justify-content: space-between;
       margin-top: 20px;
     }
 
     .buttons button {
-      flex: 1 1 45%;
-      padding: 10px;
+      flex: 1;
+      padding: 8px;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       font-weight: bold;
       font-size: 1rem;
+      margin-right: 10px;
+    }
+
+    .buttons button:last-child {
+      margin-right: 0;
     }
 
     .confirmar { background-color: #0d6efd; color: white; }
-    .limpar { background-color: #ffc107; color: white; }
-    .zerar { background-color: #dc3545; color: white; }
-    .finalizar { background-color: #198754; color: white; }
+    .finalizar { background-color: #e2e6ea; color: black; }
+    .sair { background-color: transparent; color: black; border: 1px solid #ccc; }
 
     .mensagem-final {
       background-color: #d4edda;
@@ -159,18 +172,23 @@
         </div>
         <div class="field">
           <label for="os">Nº OS</label>
-          <input type="text" id="os" class="readonly" readonly />
+          <input type="text" id="os" readonly class="readonly" />
         </div>
       </div>
 
       <label for="etiqueta">Lê Etiqueta</label>
       <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
 
-      <label for="produto">Lê Produto</label>
+      <div class="inline-group">
+        <label for="produto" style="flex: 2;">Lê Produto</label>
+        <label style="flex: 1; display: flex; align-items: center; white-space: nowrap;">
+          <input type="checkbox" id="volume" style="margin-right: 5px;" /> Volume Paletizado
+        </label>
+      </div>
       <input type="text" id="produto" placeholder="Digite ou escaneie" />
 
       <label for="descricao">Descrição do Produto</label>
-      <input type="text" id="descricao" class="readonly" readonly />
+      <input type="text" id="descricao" class="readonly" readonly style="background-color: #e9ecef;" />
 
       <div class="grid">
         <div>
@@ -193,13 +211,12 @@
 
       <label for="cliente">Cliente</label>
       <input type="text" readonly class="readonly" id="cliente" />
+
       <div class="mensagem-final" id="mensagem"></div>
     </div>
 
     <div class="buttons">
       <button class="confirmar" onclick="confirmar()">Confirmar</button>
-      <button class="limpar" onclick="limpar()">Limpar</button>
-      <button class="zerar" onclick="zerar()">Zerar</button>
       <button class="finalizar" onclick="finalizar()">Finalizar</button>
     </div>
   </div>
@@ -213,10 +230,6 @@
   </footer>
 
   <script>
-    let totalItens = 10;
-    let itensLidos = 0;
-    let volsLidos = 0;
-
     function voltar() {
       window.history.back();
     }
@@ -237,23 +250,6 @@
       mostrarMensagem("Conferência Finalizada com Sucesso!");
     }
 
-    function limpar() {
-      document.getElementById("etiqueta").value = "";
-      document.getElementById("produto").value = "";
-      document.getElementById("descricao").value = "";
-      document.getElementById("qtdItens").value = "0";
-      document.getElementById("qtdVols").value = "0";
-      document.getElementById("etiqueta").focus();
-    }
-
-    function zerar() {
-      itensLidos = 0;
-      volsLidos = 0;
-      document.getElementById("itemLido").value = `0/${totalItens}`;
-      document.getElementById("volLido").value = `0/${totalItens}`;
-      limpar();
-    }
-
     function mostrarMensagem(msg) {
       const mensagemDiv = document.getElementById("mensagem");
       mensagemDiv.textContent = msg;
@@ -263,8 +259,13 @@
       }, 3000);
     }
 
+    let totalItens = 10;
+    let itensLidos = 0;
+    let volsLidos = 0;
+
     document.getElementById("agendaSelect").addEventListener("change", function () {
       const agenda = this.value;
+
       if (agenda === "000001") {
         document.getElementById("os").value = "102030";
         document.getElementById("cliente").value = "Mantran Tecnologias LTDA ME";
@@ -272,7 +273,13 @@
         document.getElementById("volLido").value = `0/${totalItens}`;
         itensLidos = 0;
         volsLidos = 0;
-        document.getElementById("etiqueta").focus();
+
+        setTimeout(() => {
+          document.getElementById("etiqueta").focus();
+        }, 100);
+      } else {
+        document.getElementById("os").value = "";
+        document.getElementById("cliente").value = "";
       }
     });
 
@@ -289,6 +296,7 @@
         document.getElementById("descricao").value = "Notebook Acer";
         document.getElementById("qtdItens").value = "1";
         document.getElementById("qtdVols").value = "1";
+
         document.getElementById("itemLido").value = `${itensLidos}/${totalItens}`;
         document.getElementById("volLido").value = `${volsLidos}/${totalItens}`;
 
@@ -297,6 +305,7 @@
         document.getElementById("descricao").value = "";
         document.getElementById("qtdItens").value = "0";
         document.getElementById("qtdVols").value = "0";
+
         document.getElementById("etiqueta").focus();
 
         if (itensLidos >= totalItens && volsLidos >= totalItens) {
