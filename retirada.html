@@ -18,7 +18,7 @@
 
     h2 {
       text-align: center;
-      margin: 0 0 1rem;
+      margin-bottom: 1rem;
     }
 
     .form-group {
@@ -79,10 +79,11 @@
       padding: 0 1rem;
       box-sizing: border-box;
       z-index: 998;
+      flex-wrap: nowrap;
     }
 
     .acoes button {
-      padding: 10px 20px;
+      padding: 10px;
       font-size: 14px;
       font-weight: bold;
       border: none;
@@ -91,7 +92,7 @@
       white-space: nowrap;
       transition: background 0.3s ease;
       flex: 1;
-      max-width: 200px;
+      max-width: 180px;
     }
 
     .btn-finalizar {
@@ -110,23 +111,6 @@
 
     .btn-zerar:hover {
       background-color: #e0a800;
-    }
-
-    @media (max-width: 600px) {
-      .row.nowrap {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-      }
-
-      .acoes {
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .acoes button {
-        max-width: 100%;
-        width: 100%;
-      }
     }
 
     .rodape {
@@ -166,6 +150,18 @@
     .rodape .icones i.ativo {
       color: #c00000;
     }
+
+    @media (max-width: 600px) {
+      .acoes {
+        flex-direction: row;
+        gap: 10px;
+      }
+
+      .acoes button {
+        flex: 1;
+        max-width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -174,14 +170,16 @@
 
   <div class="form-group">
     <label for="agenda">Agenda</label>
-    <select id="agenda">
+    <select id="agenda" onchange="verificarAgenda()">
       <option value="">Selecione a agenda</option>
+      <option value="000001">000001</option>
+      <option value="000002">000002</option>
     </select>
   </div>
 
   <div class="form-group">
     <label for="codigo">Lê Produto (Código de Barras)</label>
-    <input type="text" id="codigo" placeholder="Escaneie o código de barras" oninput="iniciarLeitura()">
+    <input type="text" id="codigo" placeholder="Escaneie o código de barras" oninput="iniciarLeitura()" disabled>
   </div>
 
   <div class="form-group">
@@ -235,7 +233,7 @@
   <footer class="rodape">
     <div class="icones">
       <i class="fas fa-arrow-left" onclick="voltar()"></i>
-      <i class="fas fa-home" id="homeIcon" onclick="irParaMenu()"></i>
+      <i class="fas fa-home" onclick="irParaMenu()"></i>
       <i class="fas fa-sign-out-alt" onclick="logout()"></i>
     </div>
   </footer>
@@ -243,6 +241,17 @@
   <script>
     let itensLidos = [];
     let timeout;
+
+    function verificarAgenda() {
+      const agenda = document.getElementById("agenda").value;
+      const campoCodigo = document.getElementById("codigo");
+      campoCodigo.disabled = !(agenda === "000001" || agenda === "000002");
+      if (!campoCodigo.disabled) {
+        campoCodigo.focus();
+      } else {
+        campoCodigo.value = "";
+      }
+    }
 
     function iniciarLeitura() {
       clearTimeout(timeout);
@@ -279,7 +288,6 @@
     function atualizarTotais() {
       const totalItens = itensLidos.reduce((sum, item) => sum + Number(item.qtdItem), 0);
       const totalLidos = itensLidos.reduce((sum, item) => sum + Number(item.qtdLida), 0);
-
       document.getElementById("qtdLidaItens").value = `${totalLidos} / ${totalItens}`;
       document.getElementById("qtdTotal").value = totalItens;
     }
@@ -307,7 +315,6 @@
       document.getElementById("serie").value = "";
       document.getElementById("qtdLidaItens").value = "";
       document.getElementById("qtdTotal").value = "";
-      document.getElementById("codigo").focus();
     }
 
     function zerarGrid() {
