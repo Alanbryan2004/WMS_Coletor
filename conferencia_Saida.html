@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Retirada de Mercadorias - WMS Coletor</title>
+  <title>Retirada - WMS Coletor</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     * { box-sizing: border-box; }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -14,6 +15,7 @@
       font-family: Arial, sans-serif;
       background: #f4f4f4;
     }
+
     body {
       display: flex;
       justify-content: center;
@@ -21,6 +23,7 @@
       padding: 1rem;
       padding-bottom: 120px;
     }
+
     .container {
       width: 100%;
       max-width: 500px;
@@ -33,11 +36,13 @@
       flex-direction: column;
       justify-content: flex-end;
     }
+
     label {
       font-weight: bold;
       display: block;
       margin-top: 10px;
     }
+
     input, select {
       width: 100%;
       padding: 10px;
@@ -47,19 +52,43 @@
       border: 1px solid #ccc;
       font-size: 1rem;
     }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 10px;
     }
+
     .readonly {
       background-color: #e9ecef;
     }
+
+    .inline-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .inline-group > label {
+      margin: 0;
+    }
+
+    .inline-fields {
+      display: flex;
+      gap: 10px;
+    }
+
+    .inline-fields .field {
+      flex: 1;
+    }
+
     .buttons {
       display: flex;
       justify-content: space-between;
       margin-top: 20px;
     }
+
     .buttons button {
       flex: 1;
       padding: 8px;
@@ -70,11 +99,15 @@
       font-size: 1rem;
       margin-right: 10px;
     }
+
     .buttons button:last-child {
       margin-right: 0;
     }
+
     .confirmar { background-color: #0d6efd; color: white; }
     .finalizar { background-color: #e2e6ea; color: black; }
+    .sair { background-color: transparent; color: black; border: 1px solid #ccc; }
+
     .mensagem-final {
       background-color: #d4edda;
       color: #155724;
@@ -86,6 +119,7 @@
       text-align: center;
       font-weight: bold;
     }
+
     footer.rodape {
       position: fixed;
       bottom: 0;
@@ -99,12 +133,14 @@
       box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
       z-index: 999;
     }
+
     .rodape .icones {
       display: flex;
       width: 100%;
       justify-content: space-between;
       align-items: center;
     }
+
     .rodape .icones i {
       font-size: 22px;
       flex: 1;
@@ -113,158 +149,172 @@
       color: #555;
       transition: color 0.3s ease;
     }
+
     .rodape .icones i:hover {
       color: #0d6efd;
     }
+
     .rodape .icones i.ativo {
       color: #c00000;
     }
   </style>
 </head>
 <body>
-<div class="container">
-  <div>
-    <div class="grid">
-      <div>
-        <label for="agendaSelect">Agenda</label>
-        <select id="agendaSelect">
-          <option value="">Selecionar</option>
-          <option value="000001">000001</option>
-        </select>
+  <div class="container">
+    <div>
+      <div class="inline-fields">
+        <div class="field">
+          <label for="agendaSelect">Agenda</label>
+          <select id="agendaSelect">
+            <option value="">Selecionar</option>
+            <option value="000001">000001</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="os">Nº OS</label>
+          <input type="text" id="os" readonly class="readonly" />
+        </div>
       </div>
-      <div>
-        <label for="nf">Nº OS</label>
-        <select id="nf" class="readonly">
-          <option value="">Selecionar</option>
-        </select>
+
+      <label for="etiqueta">Lê Etiqueta</label>
+      <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
+
+      <div class="inline-group">
+        <label for="produto" style="flex: 2;">Lê Produto</label>
+        <label style="flex: 1; display: flex; align-items: center; white-space: nowrap;">
+          <input type="checkbox" id="volume" style="margin-right: 5px;" /> Volume Paletizado
+        </label>
       </div>
+      <input type="text" id="produto" placeholder="Digite ou escaneie" />
+
+      <label for="descricao">Descrição do Produto</label>
+      <input type="text" id="descricao" class="readonly" readonly style="background-color: #e9ecef;" />
+
+      <div class="grid">
+        <div>
+          <label>Qtde Itens</label>
+          <input type="text" id="qtdItens" value="0" readonly />
+        </div>
+        <div>
+          <label>Item Lido / Conferir</label>
+          <input type="text" id="itemLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+        </div>
+        <div>
+          <label>Qtde Vols</label>
+          <input type="text" id="qtdVols" value="0" readonly />
+        </div>
+        <div>
+          <label>Vol Lido / Conferir</label>
+          <input type="text" id="volLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+        </div>
+      </div>
+
+      <label for="cliente">Cliente</label>
+      <input type="text" readonly class="readonly" id="cliente" />
+
+      <div class="mensagem-final" id="mensagem"></div>
     </div>
 
-    <label for="etiqueta">Lê Etiqueta</label>
-    <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
-
-    <label for="produto">Lê Produto</label>
-    <input type="text" id="produto" placeholder="Digite ou escaneie" />
-
-    <label for="descricao">Descrição do Produto</label>
-    <input type="text" id="descricao" class="readonly" readonly />
-
-    <div class="grid">
-      <div>
-        <label>Qtde Itens</label>
-        <input type="text" id="qtdItens" readonly value="0" />
-      </div>
-      <div>
-        <label>Item Lido / Conferir</label>
-        <input type="text" id="itemLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
-      </div>
-      <div>
-        <label>Qtde Vols</label>
-        <input type="text" id="qtdVols" readonly value="0" />
-      </div>
-      <div>
-        <label>Vol Lido / Conferir</label>
-        <input type="text" id="volLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
-      </div>
+    <div class="buttons">
+      <button class="confirmar" onclick="confirmar()">Confirmar</button>
+      <button class="finalizar" onclick="finalizar()">Finalizar</button>
     </div>
-
-    <label for="cliente">Cliente</label>
-    <input type="text" id="cliente" class="readonly" readonly />
-
-    <div class="mensagem-final" id="mensagem"></div>
   </div>
 
-  <div class="buttons">
-    <button class="confirmar" onclick="confirmar()">Confirmar</button>
-    <button class="finalizar" onclick="finalizar()">Finalizar</button>
-  </div>
-</div>
+  <footer class="rodape">
+    <div class="icones">
+      <i class="fas fa-arrow-left" onclick="voltar()"></i>
+      <i class="fas fa-home" onclick="irParaMenu()"></i>
+      <i class="fas fa-sign-out-alt" onclick="logout()"></i>
+    </div>
+  </footer>
 
-<footer class="rodape">
-  <div class="icones">
-    <i class="fas fa-arrow-left" onclick="voltar()"></i>
-    <i class="fas fa-home" onclick="irParaMenu()"></i>
-    <i class="fas fa-sign-out-alt" onclick="logout()"></i>
-  </div>
-</footer>
-
-<script>
-  let totalItens = 10;
-  let itensLidos = 0;
-  let volsLidos = 0;
-
-  function mostrarMensagem(msg) {
-    const mensagemDiv = document.getElementById("mensagem");
-    mensagemDiv.textContent = msg;
-    mensagemDiv.style.display = "block";
-    setTimeout(() => {
-      mensagemDiv.style.display = "none";
-    }, 3000);
-  }
-
-  function voltar() {
-    window.history.back();
-  }
-
-  function irParaMenu() {
-    window.location.href = 'menu.html';
-  }
-
-  function logout() {
-    window.location.href = 'index.html';
-  }
-
-  function confirmar() {
-    mostrarMensagem("Produto armazenado com sucesso!");
-  }
-
-  function finalizar() {
-    mostrarMensagem("Conferência Finalizada com Sucesso!");
-  }
-
-  document.getElementById("agendaSelect").addEventListener("change", function () {
-    if (this.value === "000001") {
-      document.getElementById("nf").innerHTML = '<option value="">Selecionar</option><option value="102030">102030</option>';
-      document.getElementById("cliente").value = "Mantran Tecnologias LTDA ME";
-      document.getElementById("itemLido").value = `0/${totalItens}`;
-      document.getElementById("volLido").value = `0/${totalItens}`;
-      itensLidos = 0;
-      volsLidos = 0;
-    } else {
-      document.getElementById("nf").innerHTML = '<option value="">Selecionar</option>';
-      document.getElementById("cliente").value = "";
+  <script>
+    function voltar() {
+      window.history.back();
     }
-  });
 
-  document.getElementById("etiqueta").addEventListener("change", function () {
-    document.getElementById("produto").focus();
-  });
+    function irParaMenu() {
+      window.location.href = 'menu.html';
+    }
 
-  document.getElementById("produto").addEventListener("change", function () {
-    const valor = this.value.trim();
-    if (valor !== "") {
-      itensLidos++;
-      volsLidos++;
+    function logout() {
+      window.location.href = 'index.html';
+    }
 
-      document.getElementById("descricao").value = "Notebook Acer";
-      document.getElementById("qtdItens").value = "1";
-      document.getElementById("qtdVols").value = "1";
-      document.getElementById("itemLido").value = `${itensLidos}/${totalItens}`;
-      document.getElementById("volLido").value = `${volsLidos}/${totalItens}`;
+    function confirmar() {
+      mostrarMensagem("Produto armazenado com sucesso!");
+    }
 
-      document.getElementById("etiqueta").value = "";
-      document.getElementById("produto").value = "";
-      document.getElementById("descricao").value = "";
-      document.getElementById("qtdItens").value = "0";
-      document.getElementById("qtdVols").value = "0";
+    function finalizar() {
+      mostrarMensagem("Conferência Finalizada com Sucesso!");
+    }
 
-      document.getElementById("etiqueta").focus();
+    function mostrarMensagem(msg) {
+      const mensagemDiv = document.getElementById("mensagem");
+      mensagemDiv.textContent = msg;
+      mensagemDiv.style.display = "block";
+      setTimeout(() => {
+        mensagemDiv.style.display = "none";
+      }, 3000);
+    }
 
-      if (itensLidos >= totalItens && volsLidos >= totalItens) {
-        setTimeout(() => mostrarMensagem("Conferência Finalizada com Sucesso!"), 100);
+    let totalItens = 10;
+    let itensLidos = 0;
+    let volsLidos = 0;
+
+    document.getElementById("agendaSelect").addEventListener("change", function () {
+      const agenda = this.value;
+
+      if (agenda === "000001") {
+        document.getElementById("os").value = "102030";
+        document.getElementById("cliente").value = "Mantran Tecnologias LTDA ME";
+        document.getElementById("itemLido").value = `0/${totalItens}`;
+        document.getElementById("volLido").value = `0/${totalItens}`;
+        itensLidos = 0;
+        volsLidos = 0;
+
+        setTimeout(() => {
+          document.getElementById("etiqueta").focus();
+        }, 100);
+      } else {
+        document.getElementById("os").value = "";
+        document.getElementById("cliente").value = "";
       }
-    }
-  });
-</script>
+    });
+
+    document.getElementById("etiqueta").addEventListener("change", function () {
+      document.getElementById("produto").focus();
+    });
+
+    document.getElementById("produto").addEventListener("change", function () {
+      const produto = this.value.trim();
+      if (produto !== "") {
+        itensLidos++;
+        volsLidos++;
+
+        document.getElementById("descricao").value = "Notebook Acer";
+        document.getElementById("qtdItens").value = "1";
+        document.getElementById("qtdVols").value = "1";
+
+        document.getElementById("itemLido").value = `${itensLidos}/${totalItens}`;
+        document.getElementById("volLido").value = `${volsLidos}/${totalItens}`;
+
+        document.getElementById("etiqueta").value = "";
+        document.getElementById("produto").value = "";
+        document.getElementById("descricao").value = "";
+        document.getElementById("qtdItens").value = "0";
+        document.getElementById("qtdVols").value = "0";
+
+        document.getElementById("etiqueta").focus();
+
+        if (itensLidos >= totalItens && volsLidos >= totalItens) {
+          setTimeout(() => {
+            mostrarMensagem("Conferência Finalizada com Sucesso!");
+          }, 100);
+        }
+      }
+    });
+  </script>
 </body>
 </html>
