@@ -76,7 +76,7 @@
 
     .inline-fields {
       display: flex;
-      gap: 2px;
+      gap: 10px;
     }
 
     .inline-fields .field {
@@ -269,8 +269,8 @@
       if (agenda === "000001") {
         document.getElementById("os").value = "102030";
         document.getElementById("cliente").value = "Mantran Tecnologias LTDA ME";
-        document.getElementById("itemLido").value = `0/${totalItens}`;
-        document.getElementById("volLido").value = `0/${totalItens}`;
+        document.getElementById("itemLido").value = 0/${totalItens};
+        document.getElementById("volLido").value = 0/${totalItens};
         itensLidos = 0;
         volsLidos = 0;
 
@@ -297,8 +297,8 @@
         document.getElementById("qtdItens").value = "1";
         document.getElementById("qtdVols").value = "1";
 
-        document.getElementById("itemLido").value = `${itensLidos}/${totalItens}`;
-        document.getElementById("volLido").value = `${volsLidos}/${totalItens}`;
+        document.getElementById("itemLido").value = ${itensLidos}/${totalItens};
+        document.getElementById("volLido").value = ${volsLidos}/${totalItens};
 
         document.getElementById("etiqueta").value = "";
         document.getElementById("produto").value = "";
