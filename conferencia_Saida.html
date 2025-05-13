@@ -169,8 +169,8 @@
           </select>
         </div>
         <div class="field">
-          <label for="nf">Nº NF</label>
-          <input type="text" id="nf" readonly />
+          <label for="os">Nº OS</label>
+          <input type="text" id="os" readonly class="readonly" />
         </div>
       </div>
 
@@ -180,13 +180,13 @@
       <label for="etiqueta">Lê Etiqueta</label>
       <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
 
-      <label for="descricaoProduto">Descrição do Produto</label>
-      <input type="text" id="descricaoProduto" placeholder="Digite a descrição do produto" />
-
       <div class="inline-group">
         <label for="produto" style="flex: 2;">Lê Produto</label>
       </div>
       <input type="text" id="produto" placeholder="Digite ou escaneie" />
+
+      <label for="descricaoProduto">Descrição do Produto</label>
+      <input type="text" id="descricaoProduto" placeholder="Digite a descrição do produto" />
 
       <div class="grid">
         <div>
@@ -230,12 +230,13 @@
 
   <script>
     const agendaSelect = document.getElementById('agendaSelect');
-    const nfInput = document.getElementById('nf');
+    const osInput = document.getElementById('os');
     const clienteInput = document.getElementById('cliente');
     const descricaoProdutoInput = document.getElementById('descricaoProduto');
+    const produtoInput = document.getElementById('produto');
     const camposParaBloquear = [
       document.getElementById('etiqueta'),
-      document.getElementById('produto'),
+      produtoInput,
     ];
 
     // Bloquear os campos no início
@@ -252,15 +253,21 @@
       const agendaSelecionada = agendaSelect.value;
 
       if (agendaSelecionada === '000001') {
-        nfInput.value = '00075689'; // Preenche o NF automaticamente
+        osInput.value = '00075689'; // Preenche a OS automaticamente
         clienteInput.value = 'Mantran Tecnologias LTDA Me'; // Preenche o Cliente
-        descricaoProdutoInput.value = 'Produto A'; // Preenche a Descrição do Produto
+        descricaoProdutoInput.value = ''; // Limpa o campo de Descrição do Produto
         bloquearCampos(false); // Libera os campos
       } else {
-        nfInput.value = ''; // Limpa o campo de NF
+        osInput.value = ''; // Limpa o campo de OS
         clienteInput.value = ''; // Limpa o campo de Cliente
         descricaoProdutoInput.value = ''; // Limpa o campo de Descrição do Produto
         bloquearCampos(true); // Bloqueia novamente se selecionar algo inválido
+      }
+    });
+
+    produtoInput.addEventListener('input', () => {
+      if (produtoInput.value) {
+        descricaoProdutoInput.value = 'Notebook Acer'; // Preenche a descrição do produto
       }
     });
 
