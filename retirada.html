@@ -89,17 +89,29 @@
       font-weight: bold;
       border: none;
       border-radius: 8px;
-      background-color: #c00000;
       color: white;
       cursor: pointer;
       transition: background 0.2s ease;
     }
 
-    .acoes button:hover {
-      background-color: #a00000;
+    .btn-finalizar {
+      background-color: #007bff; /* Azul */
     }
 
-     @media (max-width: 600px) {
+    .btn-finalizar:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-zerar {
+      background-color: #ffc107; /* Amarelo */
+      color: #000; /* Contraste com fundo amarelo */
+    }
+
+    .btn-zerar:hover {
+      background-color: #e0a800;
+    }
+
+    @media (max-width: 600px) {
       .row.nowrap {
         flex-wrap: nowrap;
         overflow-x: auto;
@@ -112,9 +124,9 @@
       .acoes button {
         max-width: 100%;
       }
+    }
 
-
-.rodape {
+    .rodape {
       position: fixed;
       bottom: 0;
       left: 0;
@@ -151,11 +163,6 @@
     .rodape .icones i.ativo {
       color: #c00000;
     }
-
-     
-    }
-
-    
   </style>
 </head>
 <body>
@@ -218,18 +225,18 @@
   </table>
 
   <div class="acoes">
-    <button onclick="finalizarAgenda()"><i class="fas fa-check"></i> Finalizar</button>
-    <button onclick="zerarGrid()"><i class="fas fa-eraser"></i> Zerar</button>
+    <button class="btn-finalizar" onclick="finalizarAgenda()"><i class="fas fa-check"></i> Finalizar</button>
+    <button class="btn-zerar" onclick="zerarGrid()"><i class="fas fa-eraser"></i> Zerar</button>
   </div>
 
-<footer class="rodape">
+  <footer class="rodape">
     <div class="icones">
       <i class="fas fa-arrow-left" onclick="voltar()"></i>
       <i class="fas fa-home" id="homeIcon" onclick="irParaMenu()"></i>
       <i class="fas fa-sign-out-alt" onclick="logout()"></i>
     </div>
   </footer>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <script>
     let itensLidos = [];
     let timeout;
@@ -314,6 +321,13 @@
       window.location.href = "https://wms-coletor2.vercel.app/packlist.html";
     }
 
+    function irParaMenu() {
+      window.location.href = "https://wms-coletor2.vercel.app/menu.html";
+    }
+
+    function logout() {
+      window.location.href = "https://wms-coletor2.vercel.app/index.html";
+    }
   </script>
 
 </body>
