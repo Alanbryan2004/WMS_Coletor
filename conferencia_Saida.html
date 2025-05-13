@@ -239,8 +239,9 @@
     const itemLidoInput = document.getElementById('itemLido');
     const volLidoInput = document.getElementById('volLido');
     const mensagemFinal = document.getElementById('mensagem');
+    const etiquetaInput = document.getElementById('etiqueta');
     const camposParaBloquear = [
-      document.getElementById('etiqueta'),
+      etiquetaInput,
       produtoInput,
     ];
 
@@ -286,6 +287,10 @@
         volCount++;  // Incrementa contador de volumes lidos
         itemLidoInput.value = `${itemCount}/10`; // Atualiza Item Lido
         volLidoInput.value = `${volCount}/10`; // Atualiza Vol Lido
+
+        // Limpa os campos para próxima leitura
+        etiquetaInput.value = '';
+        produtoInput.value = '';
 
         // Verifica se a contagem atingiu 10
         if (itemCount === 10) {
