@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Retirada de Mercadorias - WMS Coletor</title>
+  <title>Retirada - WMS Coletor</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     * { box-sizing: border-box; }
@@ -34,13 +34,13 @@
       min-height: calc(100vh - 120px);
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      justify-content: flex-end;
     }
 
     label {
       font-weight: bold;
       display: block;
-      margin-top: 10px;
+      margin-top: 15px;
     }
 
     input, select {
@@ -66,13 +66,34 @@
     .inline-fields {
       display: flex;
       gap: 10px;
-      align-items: flex-start;
-      margin-bottom: 10px;
+      margin-top: 10px;
     }
 
-    .field {
+    .inline-fields .field {
       flex: 1;
     }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      flex: 1 1 45%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .confirmar { background-color: #0d6efd; color: white; }
+    .limpar { background-color: #ffc107; color: white; }
+    .zerar { background-color: #dc3545; color: white; }
+    .finalizar { background-color: #198754; color: white; }
 
     .mensagem-final {
       background-color: #d4edda;
@@ -127,52 +148,60 @@
 </head>
 <body>
   <div class="container">
-    <div class="inline-fields">
-      <div class="field">
-        <label for="agendaSelect">Agenda</label>
-        <select id="agendaSelect">
-          <option value="">Selecionar</option>
-          <option value="000001">000001</option>
-        </select>
+    <div>
+      <div class="inline-fields">
+        <div class="field">
+          <label for="agendaSelect">Agenda</label>
+          <select id="agendaSelect">
+            <option value="">Selecionar</option>
+            <option value="000001">000001</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="os">Nº OS</label>
+          <input type="text" id="os" class="readonly" readonly />
+        </div>
       </div>
-      <div class="field">
-        <label for="os">Nº OS</label>
-        <input type="text" id="os" class="readonly" readonly />
+
+      <label for="etiqueta">Lê Etiqueta</label>
+      <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
+
+      <label for="produto">Lê Produto</label>
+      <input type="text" id="produto" placeholder="Digite ou escaneie" />
+
+      <label for="descricao">Descrição do Produto</label>
+      <input type="text" id="descricao" class="readonly" readonly />
+
+      <div class="grid">
+        <div>
+          <label>Qtde Itens</label>
+          <input type="text" id="qtdItens" value="0" readonly />
+        </div>
+        <div>
+          <label>Item Lido / Conferir</label>
+          <input type="text" id="itemLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+        </div>
+        <div>
+          <label>Qtde Vols</label>
+          <input type="text" id="qtdVols" value="0" readonly />
+        </div>
+        <div>
+          <label>Vol Lido / Conferir</label>
+          <input type="text" id="volLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+        </div>
       </div>
+
+      <label for="cliente">Cliente</label>
+      <input type="text" readonly class="readonly" id="cliente" />
+      <div class="mensagem-final" id="mensagem"></div>
     </div>
 
-    <label for="etiqueta">Lê Etiqueta</label>
-    <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
-
-    <label for="produto">Lê Produto</label>
-    <input type="text" id="produto" placeholder="Digite ou escaneie" />
-
-    <label for="descricao">Descrição do Produto</label>
-    <input type="text" id="descricao" class="readonly" readonly />
-
-    <div class="grid">
-      <div>
-        <label>Qtde Itens</label>
-        <input type="text" id="qtdItens" value="0" readonly />
-      </div>
-      <div>
-        <label>Item Lido / Conferir</label>
-        <input type="text" id="itemLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
-      </div>
-      <div>
-        <label>Qtde Vols</label>
-        <input type="text" id="qtdVols" value="0" readonly />
-      </div>
-      <div>
-        <label>Vol Lido / Conferir</label>
-        <input type="text" id="volLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
-      </div>
+    <div class="buttons">
+      <button class="confirmar" onclick="confirmar()">Confirmar</button>
+      <button class="limpar" onclick="limpar()">Limpar</button>
+      <button class="zerar" onclick="zerar()">Zerar</button>
+      <button class="finalizar" onclick="finalizar()">Finalizar</button>
     </div>
-
-    <label for="cliente">Cliente</label>
-    <input type="text" readonly class="readonly" id="cliente" />
-
-    <div class="mensagem-final" id="mensagem"></div>
   </div>
 
   <footer class="rodape">
@@ -184,6 +213,10 @@
   </footer>
 
   <script>
+    let totalItens = 10;
+    let itensLidos = 0;
+    let volsLidos = 0;
+
     function voltar() {
       window.history.back();
     }
@@ -196,6 +229,31 @@
       window.location.href = 'index.html';
     }
 
+    function confirmar() {
+      mostrarMensagem("Produto armazenado com sucesso!");
+    }
+
+    function finalizar() {
+      mostrarMensagem("Conferência Finalizada com Sucesso!");
+    }
+
+    function limpar() {
+      document.getElementById("etiqueta").value = "";
+      document.getElementById("produto").value = "";
+      document.getElementById("descricao").value = "";
+      document.getElementById("qtdItens").value = "0";
+      document.getElementById("qtdVols").value = "0";
+      document.getElementById("etiqueta").focus();
+    }
+
+    function zerar() {
+      itensLidos = 0;
+      volsLidos = 0;
+      document.getElementById("itemLido").value = `0/${totalItens}`;
+      document.getElementById("volLido").value = `0/${totalItens}`;
+      limpar();
+    }
+
     function mostrarMensagem(msg) {
       const mensagemDiv = document.getElementById("mensagem");
       mensagemDiv.textContent = msg;
@@ -205,13 +263,8 @@
       }, 3000);
     }
 
-    let totalItens = 10;
-    let itensLidos = 0;
-    let volsLidos = 0;
-
     document.getElementById("agendaSelect").addEventListener("change", function () {
       const agenda = this.value;
-
       if (agenda === "000001") {
         document.getElementById("os").value = "102030";
         document.getElementById("cliente").value = "Mantran Tecnologias LTDA ME";
@@ -220,11 +273,6 @@
         itensLidos = 0;
         volsLidos = 0;
         document.getElementById("etiqueta").focus();
-      } else {
-        document.getElementById("os").value = "";
-        document.getElementById("cliente").value = "";
-        document.getElementById("itemLido").value = `0/0`;
-        document.getElementById("volLido").value = `0/0`;
       }
     });
 
@@ -241,7 +289,6 @@
         document.getElementById("descricao").value = "Notebook Acer";
         document.getElementById("qtdItens").value = "1";
         document.getElementById("qtdVols").value = "1";
-
         document.getElementById("itemLido").value = `${itensLidos}/${totalItens}`;
         document.getElementById("volLido").value = `${volsLidos}/${totalItens}`;
 
