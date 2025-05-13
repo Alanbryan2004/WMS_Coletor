@@ -63,17 +63,6 @@
       background-color: #e9ecef;
     }
 
-    .inline-group {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 5px;
-    }
-
-    .inline-group > label {
-      margin: 0;
-    }
-
     .inline-fields {
       display: flex;
       gap: 10px;
@@ -172,23 +161,18 @@
         </div>
         <div class="field">
           <label for="os">Nº OS</label>
-          <input type="text" id="os" readonly class="readonly" />
+          <input type="text" id="os" class="readonly" readonly />
         </div>
       </div>
 
       <label for="etiqueta">Lê Etiqueta</label>
       <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
 
-      <div class="inline-group">
-        <label for="produto" style="flex: 2;">Lê Produto</label>
-        <label style="flex: 1; display: flex; align-items: center; white-space: nowrap;">
-          <input type="checkbox" id="volume" style="margin-right: 5px;" /> Volume Paletizado
-        </label>
-      </div>
+      <label for="produto">Lê Produto</label>
       <input type="text" id="produto" placeholder="Digite ou escaneie" />
 
       <label for="descricao">Descrição do Produto</label>
-      <input type="text" id="descricao" class="readonly" readonly style="background-color: #e9ecef;" />
+      <input type="text" id="descricao" class="readonly" readonly />
 
       <div class="grid">
         <div>
@@ -211,7 +195,6 @@
 
       <label for="cliente">Cliente</label>
       <input type="text" readonly class="readonly" id="cliente" />
-
       <div class="mensagem-final" id="mensagem"></div>
     </div>
 
@@ -230,6 +213,10 @@
   </footer>
 
   <script>
+    let totalItens = 10;
+    let itensLidos = 0;
+    let volsLidos = 0;
+
     function voltar() {
       window.history.back();
     }
@@ -259,13 +246,8 @@
       }, 3000);
     }
 
-    let totalItens = 10;
-    let itensLidos = 0;
-    let volsLidos = 0;
-
     document.getElementById("agendaSelect").addEventListener("change", function () {
       const agenda = this.value;
-
       if (agenda === "000001") {
         document.getElementById("os").value = "102030";
         document.getElementById("cliente").value = "Mantran Tecnologias LTDA ME";
@@ -273,13 +255,7 @@
         document.getElementById("volLido").value = `0/${totalItens}`;
         itensLidos = 0;
         volsLidos = 0;
-
-        setTimeout(() => {
-          document.getElementById("etiqueta").focus();
-        }, 100);
-      } else {
-        document.getElementById("os").value = "";
-        document.getElementById("cliente").value = "";
+        document.getElementById("etiqueta").focus();
       }
     });
 
@@ -296,7 +272,6 @@
         document.getElementById("descricao").value = "Notebook Acer";
         document.getElementById("qtdItens").value = "1";
         document.getElementById("qtdVols").value = "1";
-
         document.getElementById("itemLido").value = `${itensLidos}/${totalItens}`;
         document.getElementById("volLido").value = `${volsLidos}/${totalItens}`;
 
@@ -305,7 +280,6 @@
         document.getElementById("descricao").value = "";
         document.getElementById("qtdItens").value = "0";
         document.getElementById("qtdVols").value = "0";
-
         document.getElementById("etiqueta").focus();
 
         if (itensLidos >= totalItens && volsLidos >= totalItens) {
