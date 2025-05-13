@@ -4,98 +4,282 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Recebimento - WMS Coletor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
-    input, select { display: block; margin-bottom: 10px; padding: 8px; width: 100%; }
-    .readonly { background-color: #eee; }
-    .buttons button { padding: 10px; margin-right: 5px; }
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 1rem;
+      padding-bottom: 120px; /* Ajuste do espaço para o rodapé fixo */
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      min-height: calc(100vh - 120px); /* Espaço para o rodapé fixo */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .readonly {
+      background-color: #e9ecef;
+    }
+
+    .inline-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .inline-group > label {
+      margin: 0;
+    }
+
+    .inline-fields {
+      display: flex;
+      gap: 10px;
+    }
+
+    .inline-fields .field {
+      flex: 1;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+      margin-right: 10px;
+    }
+
+    .buttons button:last-child {
+      margin-right: 0;
+    }
+
+    .confirmar { background-color: #0d6efd; color: white; }
+    .finalizar { background-color: #e2e6ea; color: black; }
+    .sair { background-color: transparent; color: black; border: 1px solid #ccc; }
+
+    .mensagem-final {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 5px;
+      display: none;
+    }
+
+    footer.rodape {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+    }
+
+    .rodape .icones {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rodape .icones i {
+      font-size: 22px;
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      color: #555;
+      transition: color 0.3s ease;
+    }
+
+    .rodape .icones i:hover {
+      color: #0d6efd;
+    }
+
+    .rodape .icones i.ativo {
+      color: #c00000;
+    }
   </style>
 </head>
 <body>
-  <label for="agendaSelect">Agenda</label>
-  <select id="agendaSelect">
-    <option value="">Selecionar</option>
-    <option value="000001">000001</option>
-  </select>
+  <div class="container">
+    <div>
+      <div class="inline-fields">
+        <div class="field">
+          <label for="agenda">Agenda</label>
+          <select id="agendaSelect">
+            <option value="">Selecionar</option>
+            <option value="000001">000001</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="nf">Nº NF</label>
+          <input type="text" id="nf" readonly />
+        </div>
+      </div>
 
-  <label for="nf">Nº NF</label>
-  <input type="text" id="nf" readonly />
+      <label for="etiqueta">Lê Etiqueta</label>
+      <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
 
-  <label for="etiqueta">Lê Etiqueta</label>
-  <input type="text" id="etiqueta" />
+      <div class="inline-group">
+        <label for="produto" style="flex: 2;">Lê Produto</label>
+        <label style="flex: 1; display: flex; align-items: center; white-space: nowrap;">
+          <input type="checkbox" id="volume" style="margin-right: 5px;" /> Volume Paletizado
+        </label>
+      </div>
+      <input type="text" id="produto" placeholder="Digite ou escaneie" />
 
-  <label>
-    <input type="checkbox" id="volume" /> Volume Paletizado
-  </label>
+      <div class="grid">
+        <div>
+          <label>Qtde Itens</label>
+          <input type="text" id="qtdItens" value="0" readonly />
+        </div>
+        <div>
+          <label>Item Lido / Conferir</label>
+          <input type="text" id="itemLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+        </div>
+        <div>
+          <label>Qtde Vols</label>
+          <input type="text" id="qtdVols" value="0" readonly />
+        </div>
+        <div>
+          <label>Vol Lido / Conferir</label>
+          <input type="text" id="volLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+        </div>
+      </div>
 
-  <label for="produto">Lê Produto</label>
-  <input type="text" id="produto" />
+      <label for="cliente">Cliente</label>
+      <input type="text" readonly class="readonly" id="cliente" />
 
-  <label for="qtdItens">Qtde Itens</label>
-  <input type="text" id="qtdItens" readonly />
+      <div id="itensRecebimento"></div>
 
-  <label for="qtdVols">Qtde Vols</label>
-  <input type="text" id="qtdVols" readonly />
+      <div class="mensagem-final" id="mensagem">
+        Conferência Finalizada com Sucesso!
+      </div>
+    </div>
 
-  <div class="buttons">
-    <button onclick="confirmar()">Confirmar</button>
-    <button onclick="finalizar()">Finalizar</button>
+    <div class="buttons">
+      <button class="confirmar" onclick="confirmar()">Confirmar</button>
+      <button class="finalizar" onclick="finalizar()">Finalizar</button>
+    </div>
   </div>
+
+  <footer class="rodape">
+    <div class="icones">
+      <i class="fas fa-arrow-left" onclick="voltar()"></i>
+      <i class="fas fa-home" onclick="irParaMenu()"></i>
+      <i class="fas fa-sign-out-alt" onclick="logout()"></i>
+    </div>
+  </footer>
 
   <script>
     const agendaSelect = document.getElementById('agendaSelect');
     const nfInput = document.getElementById('nf');
-    const volumeCheckbox = document.getElementById('volume');
+    const clienteInput = document.getElementById('cliente');
+    const camposParaBloquear = [
+      document.getElementById('etiqueta'),
+      document.getElementById('produto'),
+      document.getElementById('volume'),
+    ];
 
-    const campoEtiqueta = document.getElementById('etiqueta');
-    const campoProduto = document.getElementById('produto');
-    const campoQtdItens = document.getElementById('qtdItens');
-    const campoQtdVols = document.getElementById('qtdVols');
-
-    // Função para ajustar tabIndex conforme a flag Volume Paletizado
-    function atualizarTabIndex() {
-      let index = 1;
-      campoEtiqueta.tabIndex = index++;
-      campoProduto.tabIndex = index++;
-
-      if (volumeCheckbox.checked) {
-        campoQtdItens.removeAttribute('readonly');
-        campoQtdVols.removeAttribute('readonly');
-        campoQtdItens.tabIndex = index++;
-        campoQtdVols.tabIndex = index++;
-      } else {
-        campoQtdItens.setAttribute('readonly', true);
-        campoQtdVols.setAttribute('readonly', true);
-        campoQtdItens.tabIndex = -1;
-        campoQtdVols.tabIndex = -1;
-      }
+    // Bloquear os campos no início
+    function bloquearCampos(bloquear) {
+      camposParaBloquear.forEach(campo => {
+        campo.disabled = bloquear;
+      });
     }
 
-    // Atualiza tabIndex quando a flag muda
-    volumeCheckbox.addEventListener('change', atualizarTabIndex);
+    // Inicialmente bloqueia os campos
+    bloquearCampos(true);
 
-    // Libera campos ao selecionar agenda válida
     agendaSelect.addEventListener('change', () => {
-      if (agendaSelect.value === '000001') {
-        nfInput.value = '00075689';
-        campoEtiqueta.disabled = false;
-        campoProduto.disabled = false;
-        atualizarTabIndex();
+      const agendaSelecionada = agendaSelect.value;
+
+      if (agendaSelecionada === '000001') {
+        nfInput.value = '00075689'; // Preenche o NF automaticamente
+        clienteInput.value = 'Mantran Tecnologias LTDA Me'; // Preenche o Cliente
+        bloquearCampos(false); // Libera os campos
       } else {
-        nfInput.value = '';
-        campoEtiqueta.disabled = true;
-        campoProduto.disabled = true;
-        campoQtdItens.disabled = true;
-        campoQtdVols.disabled = true;
+        nfInput.value = ''; // Limpa o campo de NF
+        clienteInput.value = ''; // Limpa o campo de Cliente
+        bloquearCampos(true); // Bloqueia novamente se selecionar algo inválido
       }
     });
 
+    function voltar() {
+      window.history.back();
+    }
+
+    function irParaMenu() {
+      window.location.href = 'menu.html';
+    }
+
+    function logout() {
+      window.location.href = 'index.html';
+    }
+
     function confirmar() {
-      alert("Confirmado");
+      alert("Função Confirmar executada.");
     }
 
     function finalizar() {
-      alert("Finalizado");
+      document.getElementById("mensagem").style.display = "block";
     }
   </script>
 </body>
