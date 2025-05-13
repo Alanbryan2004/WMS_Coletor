@@ -13,7 +13,7 @@
       padding: 1rem 1rem 6rem;
       box-sizing: border-box;
       min-height: 100vh;
-      padding-bottom: 80px; /* espaço para o rodapé */
+      padding-bottom: 80px;
     }
 
     h2 {
@@ -71,31 +71,32 @@
     .acoes {
       display: flex;
       justify-content: center;
-      gap: 20px;
+      gap: 12px;
       position: fixed;
-      bottom: 50px;
-      width: 100%;
+      bottom: 60px;
+      left: 0;
+      right: 0;
       padding: 0 1rem;
       box-sizing: border-box;
       z-index: 998;
     }
 
     .acoes button {
-      flex: 1;
-      max-width: 150px;
-      min-width: 100px;
-      padding: 10px 15px;
+      padding: 10px 20px;
       font-size: 14px;
       font-weight: bold;
       border: none;
-      border-radius: 8px;
-      color: white;
+      border-radius: 6px;
       cursor: pointer;
-      transition: background 0.2s ease;
+      white-space: nowrap;
+      transition: background 0.3s ease;
+      flex: 1;
+      max-width: 200px;
     }
 
     .btn-finalizar {
       background-color: #007bff; /* Azul */
+      color: white;
     }
 
     .btn-finalizar:hover {
@@ -104,7 +105,7 @@
 
     .btn-zerar {
       background-color: #ffc107; /* Amarelo */
-      color: #000; /* Contraste com fundo amarelo */
+      color: black;
     }
 
     .btn-zerar:hover {
@@ -118,11 +119,13 @@
       }
 
       .acoes {
+        flex-direction: column;
         gap: 10px;
       }
 
       .acoes button {
         max-width: 100%;
+        width: 100%;
       }
     }
 
@@ -326,9 +329,8 @@
     }
 
     function logout() {
-      window.location.href = "https://wms-coletor2.vercel.app/index.html";
+      window.location.href = "https://wms-coletor2.vercel.app";
     }
   </script>
-
 </body>
 </html>
