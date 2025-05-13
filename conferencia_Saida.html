@@ -238,10 +238,14 @@
     const qtdVolsInput = document.getElementById('qtdVols');
     const itemLidoInput = document.getElementById('itemLido');
     const volLidoInput = document.getElementById('volLido');
+    const mensagemFinal = document.getElementById('mensagem');
     const camposParaBloquear = [
       document.getElementById('etiqueta'),
       produtoInput,
     ];
+
+    let itemCount = 0; // Contador de itens lidos
+    let volCount = 0;  // Contador de volumes lidos
 
     // Bloquear os campos no início
     function bloquearCampos(bloquear) {
@@ -278,6 +282,16 @@
         descricaoProdutoInput.value = 'Notebook Acer'; // Preenche a descrição do produto
         qtdItensInput.value = '1'; // Atualiza Qtde Itens
         qtdVolsInput.value = '1'; // Atualiza Qtde Vols
+        itemCount++; // Incrementa contador de itens lidos
+        volCount++;  // Incrementa contador de volumes lidos
+        itemLidoInput.value = `${itemCount}/10`; // Atualiza Item Lido
+        volLidoInput.value = `${volCount}/10`; // Atualiza Vol Lido
+
+        // Verifica se a contagem atingiu 10
+        if (itemCount === 10) {
+          mensagemFinal.style.display = 'block'; // Exibe a mensagem de sucesso
+          produtoInput.disabled = true; // Desabilita o campo "Lê Produto"
+        }
       }
     });
 
