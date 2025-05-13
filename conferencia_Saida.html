@@ -231,6 +231,44 @@
   </footer>
 
   <script>
+    const agendaSelect = document.getElementById('agendaSelect');
+    const nfSelect = document.getElementById('nf');
+    const clienteInput = document.getElementById('cliente');
+    const camposParaBloquear = [
+      document.getElementById('etiqueta'),
+      document.getElementById('produto'),
+      document.getElementById('volume'),
+    ];
+
+    // Bloquear os campos no início
+    function bloquearCampos(bloquear) {
+      camposParaBloquear.forEach(campo => {
+        campo.disabled = bloquear;
+      });
+    }
+
+    // Inicialmente bloqueia os campos
+    bloquearCampos(true);
+
+    agendaSelect.addEventListener('change', () => {
+      const agendaSelecionada = agendaSelect.value;
+
+      nfSelect.innerHTML = '<option value="">Selecionar</option>'; // Limpa opções anteriores
+
+      if (agendaSelecionada === '000001') {
+        // Adiciona a NF vinculada
+        const option = document.createElement('option');
+        option.value = '00075689';
+        option.text = '00075689';
+        nfSelect.appendChild(option);
+        nfSelect.value = '00075689'; // Seleciona automaticamente
+        clienteInput.value = 'Mantran Tecnologias LTDA Me'; // Preenche o Cliente
+        bloquearCampos(false); // Libera os campos
+      } else {
+        bloquearCampos(true); // Bloqueia novamente se selecionar algo inválido
+      }
+    });
+
     function voltar() {
       window.history.back();
     }
