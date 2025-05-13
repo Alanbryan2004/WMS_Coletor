@@ -64,51 +64,43 @@
       font-weight: bold;
     }
 
-    .acoes {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      position: fixed;
-      bottom: 50px;
-      width: 100%;
-      padding: 0 1rem;
-      box-sizing: border-box;
-      z-index: 998;
-    }
-
-    .acoes button {
-      flex: 1;
-      max-width: 150px;
-      min-width: 100px;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      background-color: #c00000;
-      color: white;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-
-    .acoes button:hover {
-      background-color: #a00000;
-    }
-
+    /* Rodapé interativo com ícones */
     .rodape {
       position: fixed;
       bottom: 0;
-      width: 100%;
+      left: 0;
+      right: 0;
       background-color: #ffffff;
-      border-top: 1px solid #ddd;
-      color: #555;
-      font-size: 12px;
-      padding: 10px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      z-index: 999;
+      padding: 10px 20px;
       box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+    }
+
+    .rodape .icones {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rodape .icones i {
+      font-size: 22px;
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      color: #555;
+      transition: color 0.3s ease;
+    }
+
+    .rodape .icones i:hover {
+      color: #0d6efd;
+    }
+
+    .rodape .icones i.ativo {
+      color: #c00000;
     }
 
     @media (max-width: 400px) {
@@ -120,17 +112,8 @@
         font-size: 13px;
       }
 
-      .acoes {
-        gap: 10px;
-      }
-
-      .acoes button {
-        max-width: 100%;
-      }
-
-      .rodape {
-        font-size: 10px;
-        padding: 8px 16px;
+      .rodape .icones i {
+        font-size: 20px;
       }
     }
   </style>
@@ -146,10 +129,13 @@
     </div>
   </div>
 
-  <div class="acoes">
-    <button onclick="voltar()"><i class="fas fa-arrow-left"></i> Voltar</button>
-    <button onclick="logout()"><i class="fas fa-door-open"></i> Sair</button>
-  </div>
+  <footer class="rodape">
+    <div class="icones">
+      <i class="fas fa-arrow-left" onclick="voltar()"></i>
+      <i class="fas fa-home" id="homeIcon" onclick="irParaMenu()"></i>
+      <i class="fas fa-sign-out-alt" onclick="logout()"></i>
+    </div>
+  </footer>
 
   <script>
     function navegar(pagina) {
@@ -157,19 +143,24 @@
     }
 
     function voltar() {
-      window.location.href = "https://wms-coletor2.vercel.app/menu.html";
+      window.history.back();
+    }
+
+    function irParaMenu() {
+      window.location.href = 'https://wms-coletor2.vercel.app/menu.html';
     }
 
     function logout() {
       localStorage.removeItem("user");
-      window.location.href = "https://wms-coletor2.vercel.app/index.html";
+      window.location.href = 'https://wms-coletor2.vercel.app/index.html';
+    }
+
+    // Ativa ícone vermelho se estiver na página packlist
+    if (window.location.pathname.includes("packlist")) {
+      const homeIcon = document.getElementById("homeIcon");
+      if (homeIcon) homeIcon.classList.add("ativo");
     }
   </script>
-
-  <footer class="rodape">
-    <span>© 2025 Mantran Tecnologias</span>
-    <span>Versão 1.0</span>
-  </footer>
 
 </body>
 </html>
