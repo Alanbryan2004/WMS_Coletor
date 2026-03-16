@@ -1,0 +1,16 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/token",
+            "destination": "http://138.59.144.70:35390/api/token"
+        },
+        {
+            "source": "/api/wms-coletor/recebimento/(.*)",
+            "destination": "http://138.59.144.70:35390/api/wms-coletor/recebimento/$1"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}
