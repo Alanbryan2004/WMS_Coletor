@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Retirada - WMS Coletor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 1rem 1rem 6rem;
+      box-sizing: border-box;
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: nowrap;
+    }
+
+    .row > .form-group {
+      flex: 1;
+      min-width: 100px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      background-color: white;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #eee;
+    }
+
+    .acoes {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      position: fixed;
+      bottom: 60px;
+      left: 0;
+      right: 0;
+      padding: 0 1rem;
+      box-sizing: border-box;
+      z-index: 998;
+      flex-wrap: nowrap;
+    }
+
+    .acoes button {
+      padding: 10px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.3s ease;
+      flex: 1;
+      max-width: 180px;
+    }
+
+    .btn-finalizar {
+      background-color: #007bff; /* Azul */
+      color: white;
+    }
+
+    .btn-finalizar:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-zerar {
+      background-color: #ffc107; /* Amarelo */
+      color: black;
+    }
+
+    .btn-zerar:hover {
+      background-color: #e0a800;
+    }
+
+    .rodape {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+    }
+
+    .rodape .icones {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rodape .icones i {
+      font-size: 22px;
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      color: #555;
+      transition: color 0.3s ease;
+    }
+
+    .rodape .icones i:hover {
+      color: #0d6efd;
+    }
+
+    .rodape .icones i.ativo {
+      color: #c00000;
+    }
+
+    @media (max-width: 600px) {
+      .acoes {
+        flex-direction: row;
+        gap: 10px;
+      }
+
+      .acoes button {
+        flex: 1;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Retirada de Mercadorias</h2>
+
+  <div class="form-group">
+    <label for="agenda">Agenda</label>
+    <select id="agenda" onchange="verificarAgenda()">
+      <option value="">Selecione a agenda</option>
+      <option value="000001">000001</option>
+      <option value="000002">000002</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="codigo">Lê Produto (Código de Barras)</label>
+    <input type="text" id="codigo" placeholder="Escaneie o código de barras" oninput="iniciarLeitura()" disabled>
+  </div>
+
+  <div class="form-group">
+    <label for="descricao">Descrição do Produto</label>
+    <input type="text" id="descricao" disabled>
+  </div>
+
+  <div class="row nowrap">
+    <div class="form-group">
+      <label for="qtd">QTD</label>
+      <input type="text" id="qtd" disabled>
+    </div>
+    <div class="form-group">
+      <label for="nf">Nº NF</label>
+      <input type="text" id="nf" disabled>
+    </div>
+    <div class="form-group">
+      <label for="serie">Série</label>
+      <input type="text" id="serie" disabled>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group">
+      <label for="qtdLidaItens">QTD Lida / Itens</label>
+      <input type="text" id="qtdLidaItens" disabled>
+    </div>
+    <div class="form-group">
+      <label for="qtdTotal">QTD Total</label>
+      <input type="text" id="qtdTotal" disabled>
+    </div>
+  </div>
+
+  <table id="tabela">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Produto</th>
+        <th>Qt Item</th>
+        <th>Qt Lido</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="acoes">
+    <button class="btn-finalizar" onclick="finalizarAgenda()"><i class="fas fa-check"></i> Finalizar</button>
+    <button class="btn-zerar" onclick="zerarGrid()"><i class="fas fa-eraser"></i> Zerar</button>
+  </div>
+
+  <footer class="rodape">
+    <div class="icones">
+      <i class="fas fa-arrow-left" onclick="voltar()"></i>
+      <i class="fas fa-home" onclick="irParaMenu()"></i>
+      <i class="fas fa-sign-out-alt" onclick="logout()"></i>
+    </div>
+  </footer>
+
+  <script>
+    let itensLidos = [];
+    let timeout;
+
+    function verificarAgenda() {
+      const agenda = document.getElementById("agenda").value;
+      const campoCodigo = document.getElementById("codigo");
+      campoCodigo.disabled = !(agenda === "000001" || agenda === "000002");
+      if (!campoCodigo.disabled) {
+        campoCodigo.focus();
+      } else {
+        campoCodigo.value = "";
+      }
+    }
+
+    function iniciarLeitura() {
+      clearTimeout(timeout);
+      timeout = setTimeout(adicionarProduto, 300);
+    }
+
+    function adicionarProduto() {
+      const codigo = document.getElementById("codigo").value.trim();
+      if (!codigo) return;
+
+      const descricao = "Produto Exemplo";
+      const qtd = 10;
+      const nf = "123456";
+      const serie = "1";
+
+      document.getElementById("descricao").value = descricao;
+      document.getElementById("qtd").value = qtd;
+      document.getElementById("nf").value = nf;
+      document.getElementById("serie").value = serie;
+
+      const index = itensLidos.findIndex(p => p.codigo === codigo);
+      if (index >= 0) {
+        itensLidos[index].qtdLida += 1;
+      } else {
+        itensLidos.push({ codigo, descricao, qtdItem: qtd, qtdLida: 1 });
+      }
+
+      atualizarTotais();
+      renderGrid();
+      document.getElementById("codigo").value = "";
+      document.getElementById("codigo").focus();
+    }
+
+    function atualizarTotais() {
+      const totalItens = itensLidos.reduce((sum, item) => sum + Number(item.qtdItem), 0);
+      const totalLidos = itensLidos.reduce((sum, item) => sum + Number(item.qtdLida), 0);
+      document.getElementById("qtdLidaItens").value = `${totalLidos} / ${totalItens}`;
+      document.getElementById("qtdTotal").value = totalItens;
+    }
+
+    function renderGrid() {
+      const tbody = document.querySelector("#tabela tbody");
+      tbody.innerHTML = "";
+      itensLidos.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.codigo}</td>
+          <td>${item.descricao}</td>
+          <td>${item.qtdItem}</td>
+          <td>${item.qtdLida}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function limparCampos() {
+      document.getElementById("codigo").value = "";
+      document.getElementById("descricao").value = "";
+      document.getElementById("qtd").value = "";
+      document.getElementById("nf").value = "";
+      document.getElementById("serie").value = "";
+      document.getElementById("qtdLidaItens").value = "";
+      document.getElementById("qtdTotal").value = "";
+    }
+
+    function zerarGrid() {
+      itensLidos = [];
+      renderGrid();
+      limparCampos();
+    }
+
+    function finalizarAgenda() {
+      alert("Agenda finalizada com sucesso!");
+    }
+
+    function voltar() {
+      window.location.href = "https://wms-coletor2.vercel.app/packlist.html";
+    }
+
+    function irParaMenu() {
+      window.location.href = "https://wms-coletor2.vercel.app/menu.html";
+    }
+
+    function logout() {
+      window.location.href = "https://wms-coletor2.vercel.app";
+    }
+  </script>
+</body>
+</html>

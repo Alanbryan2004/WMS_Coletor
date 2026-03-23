@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recebimento - WMS Coletor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 1rem;
+      padding-bottom: 120px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      min-height: calc(100vh - 120px);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .readonly {
+      background-color: #e9ecef;
+    }
+
+    .inline-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .inline-group > label {
+      margin: 0;
+    }
+
+    .inline-fields {
+      display: flex;
+      gap: 10px;
+    }
+
+    .inline-fields .field {
+      flex: 1;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+      margin-right: 10px;
+    }
+
+    .buttons button:last-child {
+      margin-right: 0;
+    }
+
+    .confirmar { background-color: #0d6efd; color: white; }
+    .finalizar { background-color: #e2e6ea; color: black; }
+    .sair { background-color: transparent; color: black; border: 1px solid #ccc; }
+
+    .mensagem-final {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 5px;
+      display: none;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    footer.rodape {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+    }
+
+    .rodape .icones {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rodape .icones i {
+      font-size: 22px;
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      color: #555;
+      transition: color 0.3s ease;
+    }
+
+    .rodape .icones i:hover {
+      color: #0d6efd;
+    }
+
+    .rodape .icones i.ativo {
+      color: #c00000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div>
+      <div class="inline-fields">
+        <div class="field">
+          <label for="agenda">Agenda</label>
+          <select id="agendaSelect">
+            <option value="">Selecionar</option>
+            <option value="000001">000001</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="nf">Nº NF</label>
+          <select id="nf">
+            <option value="">Selecionar</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="etiqueta">Lê Etiqueta</label>
+      <input type="text" id="etiqueta" placeholder="Digite ou escaneie" />
+
+      <div class="inline-group">
+        <label for="produto" style="flex: 2;">Lê Produto</label>
+        <label style="flex: 1; display: flex; align-items: center; white-space: nowrap;">
+          <input type="checkbox" id="volume" style="margin-right: 5px;" /> Volume Paletizado
+        </label>
+      </div>
+      <input type="text" id="produto" placeholder="Digite ou escaneie" />
+
+      <div class="grid">
+        <div>
+          <label>Qtde Itens</label>
+          <input type="text" id="qtdItens" value="0" readonly />
+        </div>
+        <div>
+          <label>Item Lido / Conferir</label>
+          <input type="text" id="itemLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+        </div>
+        <div>
+          <label>Qtde Vols</label>
+          <input type="text" id="qtdVols" value="0" readonly />
+        </div>
+        <div>
+          <label>Vol Lido / Conferir</label>
+          <input type="text" id="volLido" class="readonly" readonly value="0/0" style="background-color:#f8d7da" />
+        </div>
+      </div>
+
+      <label for="cliente">Cliente</label>
+      <input type="text" readonly class="readonly" id="cliente" />
+
+      <div id="itensRecebimento"></div>
+
+      <div class="mensagem-final" id="mensagem">
+        <!-- Mensagens dinâmicas aqui -->
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="confirmar" onclick="confirmar()">Confirmar</button>
+      <button class="finalizar" onclick="finalizar()">Finalizar</button>
+    </div>
+  </div>
+
+  <footer class="rodape">
+    <div class="icones">
+      <i class="fas fa-arrow-left" onclick="voltar()"></i>
+      <i class="fas fa-home" onclick="irParaMenu()"></i>
+      <i class="fas fa-sign-out-alt" onclick="logout()"></i>
+    </div>
+  </footer>
+
+  <script>
+    function voltar() {
+      window.history.back();
+    }
+
+    function irParaMenu() {
+      window.location.href = 'menu.html';
+    }
+
+    function logout() {
+      window.location.href = 'index.html';
+    }
+
+    function confirmar() {
+      mostrarMensagem("Produto armazenado com sucesso!");
+    }
+
+    function finalizar() {
+      mostrarMensagem("Conferência Finalizada com Sucesso!");
+    }
+
+    function mostrarMensagem(msg) {
+      const mensagemDiv = document.getElementById("mensagem");
+      mensagemDiv.textContent = msg;
+      mensagemDiv.style.display = "block";
+      setTimeout(() => {
+        mensagemDiv.style.display = "none";
+      }, 3000);
+    }
+
+    let totalItens = 10;
+    let itensLidos = 0;
+    let volsLidos = 0;
+
+    document.getElementById("agendaSelect").addEventListener("change", function () {
+      const agenda = this.value;
+
+      if (agenda === "000001") {
+        const nfSelect = document.getElementById("nf");
+        nfSelect.innerHTML = '<option value="">Selecionar</option><option value="102030">102030</option>';
+        document.getElementById("cliente").value = "Mantran Tecnologias LTDA ME";
+      } else {
+        document.getElementById("nf").innerHTML = '<option value="">Selecionar</option>';
+        document.getElementById("cliente").value = "";
+      }
+    });
+
+    document.getElementById("nf").addEventListener("change", function () {
+      const nf = this.value;
+      if (nf === "102030") {
+        document.getElementById("itemLido").value = `0/${totalItens}`;
+        document.getElementById("volLido").value = `0/${totalItens}`;
+        itensLidos = 0;
+        volsLidos = 0;
+      }
+    });
+
+    document.getElementById("etiqueta").addEventListener("change", function () {
+      document.getElementById("produto").focus();
+    });
+
+    document.getElementById("produto").addEventListener("change", function () {
+      const produto = this.value.trim();
+      if (produto !== "") {
+        itensLidos++;
+        volsLidos++;
+
+        document.getElementById("qtdItens").value = "1";
+        document.getElementById("qtdVols").value = "1";
+
+        document.getElementById("itemLido").value = `${itensLidos}/${totalItens}`;
+        document.getElementById("volLido").value = `${volsLidos}/${totalItens}`;
+
+        document.getElementById("etiqueta").value = "";
+        document.getElementById("produto").value = "";
+        document.getElementById("etiqueta").focus();
+
+        if (itensLidos >= totalItens && volsLidos >= totalItens) {
+          setTimeout(() => {
+            mostrarMensagem("Contagem finalizada com sucesso!");
+          }, 100);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

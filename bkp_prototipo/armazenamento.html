@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Armazenamento - WMS Coletor</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 1rem;
+      padding-bottom: 120px; /* espaço para o rodapé fixo */
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      min-height: calc(100vh - 120px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .readonly {
+      background-color: #e9ecef;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .confirmar { background-color: #0d6efd; color: white; }
+    .finalizar { background-color: #e2e6ea; color: black; }
+    .sair { background-color: transparent; color: black; border: 1px solid #ccc; }
+
+    footer.rodape {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 0;
+      box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
+      z-index: 999;
+    }
+
+    .rodape .icones {
+      display: flex;
+      width: 100%;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .rodape .icones i {
+      font-size: 22px;
+      text-align: center;
+      cursor: pointer;
+      color: #555;
+      transition: color 0.3s ease;
+    }
+
+    .rodape .icones i:hover {
+      color: #0d6efd;
+    }
+
+    .rodape .icones i.ativo {
+      color: #c00000;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 140px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #28a745;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 1000;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; bottom: 130px; }
+      to { opacity: 1; bottom: 140px; }
+    }
+
+    @keyframes fadeout {
+      from { opacity: 1; bottom: 140px; }
+      to { opacity: 0; bottom: 130px; }
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div>
+      <label for="agenda">Agenda</label>
+      <select id="agenda">
+        <option value="">Selecionar</option>
+        <option value="000001">000001</option>
+      </select>
+
+      <label for="etiqueta">Lê Etiqueta</label>
+      <input type="text" id="etiqueta" placeholder="Digite ou escaneie" autocomplete="off">
+
+      <label for="cliente">Cliente</label>
+      <input type="text" id="cliente" class="readonly" readonly>
+
+      <label for="descricao">Descrição do Produto</label>
+      <input type="text" id="descricao" class="readonly" readonly>
+
+      <label for="sugerido">Endereço Sugerido</label>
+      <input type="text" id="sugerido" class="readonly" readonly>
+
+      <label for="endereco">Lê Endereço</label>
+      <input type="text" id="endereco" placeholder="Digite ou escaneie" autocomplete="off">
+    </div>
+
+    <div class="buttons">
+      <button class="confirmar" onclick="confirmar()">Confirmar</button>
+      <button class="finalizar" onclick="finalizar()">Finalizar</button>
+    </div>
+  </div>
+
+  <footer class="rodape">
+    <div class="icones">
+      <i class="fas fa-arrow-left" onclick="voltar()"></i>
+      <i class="fas fa-home" onclick="irParaMenu()"></i>
+      <i class="fas fa-sign-out-alt" onclick="logout()"></i>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">Produto armazenado com sucesso!</div>
+
+  <script>
+    document.getElementById("agenda").addEventListener("change", () => {
+      const agenda = document.getElementById("agenda").value;
+      if (agenda === "000001") {
+        document.getElementById("cliente").value = "Mantran Tecnologias LTDA ME";
+      } else {
+        document.getElementById("cliente").value = "";
+      }
+    });
+
+    document.getElementById("etiqueta").addEventListener("change", () => {
+      const etiqueta = document.getElementById("etiqueta").value.trim();
+      if (etiqueta !== "") {
+        document.getElementById("descricao").value = "Notebook";
+        document.getElementById("sugerido").value = "D01 C049 R92 P2 N0 A";
+        document.getElementById("endereco").focus();
+      }
+    });
+
+    document.getElementById("endereco").addEventListener("change", () => {
+      const etiqueta = document.getElementById("etiqueta").value.trim();
+      const endereco = document.getElementById("endereco").value.trim();
+      if (etiqueta && endereco) {
+        confirmar();
+        limparCampos();
+      }
+    });
+
+    function confirmar() {
+      const toast = document.getElementById("toast");
+      toast.style.display = "block";
+      setTimeout(() => {
+        toast.style.display = "none";
+      }, 3000);
+    }
+
+    function finalizar() {
+      alert("Armazenagem finalizada!");
+    }
+
+    function limparCampos() {
+      document.getElementById("etiqueta").value = "";
+      document.getElementById("descricao").value = "";
+      document.getElementById("sugerido").value = "";
+      document.getElementById("endereco").value = "";
+      document.getElementById("etiqueta").focus();
+    }
+
+    function voltar() {
+      window.history.back();
+    }
+
+    function irParaMenu() {
+      window.location.href = 'menu.html';
+    }
+
+    function logout() {
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>
