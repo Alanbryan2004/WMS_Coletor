@@ -9,6 +9,10 @@
             "destination": "http://138.59.144.70:35390/api/wms-coletor/recebimento/$1"
         },
         {
+            "source": "/api/wms-coletor/armazenagem/(.*)",
+            "destination": "http://138.59.144.70:35390/api/wms-coletor/armazenagem/$1"
+        },
+        {
             "source": "/(.*)",
             "destination": "/index.html"
         }
